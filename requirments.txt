@@ -1,9 +1,8 @@
 need to update versions
 
-duckdb==0.3.4
-pandas==1.4.3
-numpy==1.23.1
-matplotlib==3.5.2
-seaborn==0.11.2
-streamlit==1.10.0
+duckdb==1.0.0
+pandas==2.2.2
+numpy==2.0.0
+matplotlib==3.9.0
+streamlit==1.35.0
 
