@@ -1,8 +1,8 @@
-need to update versions
+
 
 duckdb==1.0.0
 pandas==2.2.2
-numpy==2.0.0
+numpy==1.23.2
 matplotlib==3.9.0
 streamlit==1.35.0
 
