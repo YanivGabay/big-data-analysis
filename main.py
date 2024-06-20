@@ -2,6 +2,11 @@ from modules.loader import load_data
 from modules.tester import test_data
 from modules.loader import process_multiple_months
 from modules.processor import aggregate_sales, process_data
+from pages import overview, interactive, static_graphs
+import streamlit as st
+from modules.create_visualization import start_visualization,show_aggregated_data
+
+st.set_page_config(page_title='Data Analysis Dashboard', layout='wide')
 
 def main():
     # Define the paths and parameters
@@ -13,42 +18,19 @@ def main():
     table_name = 'raw_data'
 
     try:
-        # Load data into DuckDB from CSV
-        print("Loading data...")
-        process_multiple_months(months)
+      
+            st.success("Data has been loaded, tested, and processed successfully.")
+            start_visualization()
+            show_aggregated_data(months)
 
-        # Test data
-        for month in months:
-            print(f"Testing data for {month}...")
-            db_path = data_base_path.format(month=month.lower())
-            test_data(db_path, table_name)
-  
-        # Process data
+
        
-        for month in months:
-            print(f"Processing data for {month}...")
-            db_path = data_base_path.format(month=month.lower())
-            process_data(db_path, table_name, 'sales_data')
-            aggregate_sales(db_path, table_name)
         
-        # Analyze data
-        print("Analyzing data...")
-        query = "SELECT * FROM processed_data LIMIT 10"  
-        analysis_results = analyze_data(db_path, query)
-
-        # Visualize data
-        print("Visualizing results...")
-        create_visualization(analysis_results)
-
-       
-        print("Checking loaded data...")
-        if check_data(db_path, table_name):  # Check if the raw table exists
-            print("Data check passed: Table exists.")
-        else:
-            print("Data check failed: Table does not exist.")
+  
 
     except Exception as e:
         print(f"An error occurred: {e}")
+
 
 if __name__ == '__main__':
     main()
