@@ -42,7 +42,8 @@ def setup_runner():
             progress.progress(current_step / total_steps)
 
         
-        status_message = st.empty()
+        status_message.empty()
+        progress.empty()
 
     except Exception as e:
         st.error(f"An error occurred: {e}")

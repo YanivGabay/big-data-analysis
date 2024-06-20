@@ -1,10 +1,7 @@
-from modules.loader import load_data
-from modules.tester import test_data
-from modules.loader import process_multiple_months
-from modules.processor import aggregate_sales, process_data
+
 from pages import overview, interactive, static_graphs
 import streamlit as st
-from modules.create_visualization import start_visualization,show_aggregated_data
+
 from modules.setup_runner import get_months,setup_runner
 
 st.set_page_config(page_title='Data Analysis Dashboard', layout='wide')
@@ -13,8 +10,6 @@ def main():
    
     try:
       
-      
-
         # Setup sidebar for navigation
         st.sidebar.title('Navigation')
         choice = st.sidebar.selectbox('Choose a page:', ['Overview', 'Interactive Graphs', 'Static Graphs'])
@@ -34,9 +29,7 @@ def main():
         elif choice == 'Static Graphs':
             static_graphs.show()
 
-        # Optionally, show aggregated data if relevant for the current page
-        if choice in ['Overview', 'Interactive Graphs']:
-            show_aggregated_data(get_months())
+  
         
   
 

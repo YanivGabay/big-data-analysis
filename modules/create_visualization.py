@@ -1,5 +1,5 @@
 import streamlit as st
-from pages import overview, interactive, static_graphs
+
 import duckdb
 
 
