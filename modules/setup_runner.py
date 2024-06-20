@@ -10,28 +10,43 @@ csv_file_path = 'data/2019-{month}.csv'
 data_base_path = 'db/2019-{month}.duckdb'
 table_name = 'raw_data'
 
+def get_months():
+    return months
+
 def setup_runner():
-    
-      with st.spinner('Loading data... Please wait...'):
-            # Load data into DuckDB from CSV
-            print("Loading data...")
-            process_multiple_months(months)
+    progress = st.progress(0)
+    status_message = st.empty()
+    total_steps = len(months) * 3  # Example: each month has 3 steps
+    current_step = 0
 
-         
-            for month in months:
-                # Test data
-                print(f"Testing data for {month}...")
-                db_path = data_base_path.format(month=month.lower())
-                test_data(db_path, table_name)
+    try:
+        for month in months:
+            # Process multiple months (assuming this might involve loading the data)
+            status_message.markdown(f"Loading data for {month}...")
+            process_multiple_months([month])  # Make sure this only processes the given month
+            current_step += 1
+            progress.progress(current_step / total_steps)
 
+            # Test data
+            status_message.markdown(f"Testing data for {month}...")
+            db_path = data_base_path.format(month=month.lower())
+            test_data(db_path, table_name)
+            current_step += 1
+            progress.progress(current_step / total_steps)
 
-                # Process data
-                print(f"Processing data for {month}...")
-                db_path = data_base_path.format(month=month.lower())
-                process_data(db_path, table_name, 'sales_data')
-                aggregate_sales(db_path, table_name)
-         
+            # Process data
+            status_message.markdown(f"Processing data for {month}...")
+            process_data(db_path, table_name, 'sales_data')
+            aggregate_sales(db_path, table_name)
+            current_step += 1
+            progress.progress(current_step / total_steps)
+
         
-            for month in months:
+        status_message = st.empty()
+
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
+        raise e
+          
                
             

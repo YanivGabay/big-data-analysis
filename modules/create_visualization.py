@@ -2,19 +2,6 @@ import streamlit as st
 from pages import overview, interactive, static_graphs
 import duckdb
 
-def start_visualization():
-    # This function will start the visualization
-
-    st.sidebar.title('Navigation')
-    choice = st.sidebar.selectbox('Choose a page:', ['Overview', 'Interactive Graphs', 'Static Graphs'])
-
-    if choice == 'Overview':
-        overview.show()
-    elif choice == 'Interactive Graphs':
-        interactive.show()
-    elif choice == 'Static Graphs':
-        static_graphs.show()
-
 
 
 def fetch_aggregated_data(db_path):
