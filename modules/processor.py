@@ -1,8 +1,10 @@
 import duckdb
+from utils.logger import Logger
 
 
 def process_data(db_path, input_table_name, output_table_name):
     try:
+        Logger.section_header(f"Processing data in {db_path}...")
         with duckdb.connect(database=db_path) as con:
             con.execute(f"""
                 CREATE TABLE IF NOT EXISTS {output_table_name} AS
@@ -15,7 +17,8 @@ def process_data(db_path, input_table_name, output_table_name):
                 WHERE price IS NOT NULL
                 GROUP BY user_id;
             """)
-            print(f"Data has been processed and stored in {output_table_name}.")
+            Logger.info(f"Data has been processed and stored in {output_table_name}.")
+           
             print_table_info(con, output_table_name)
     except Exception as e:
         print(f"Error processing data in {db_path}: {e}")
@@ -59,7 +62,7 @@ def print_table_info(con, table_name):
         # Print sample data using DataFrame if the table is not empty
         if row_count > 0:
             df = con.execute(f"SELECT * FROM {table_name} LIMIT 5").df()  # Fetching first 5 rows into a DataFrame
-            print("Sample data from the table:")
+            Logger.section_header(f"Sample data from table '{table_name}':")
             print(df)
     except Exception as e:
         print(f"Error retrieving table info for {table_name}: {e}")
