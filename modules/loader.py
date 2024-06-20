@@ -16,31 +16,32 @@ def table_exists(con, table_name):
         print(f"Error checking if table exists: {e}")
         return False  # Assume table doesn't exist if there's an error
 
-def load_data(csv_file_path, db_path='db/my_database.duckdb', table_name='raw_data', auto_detect=True, delimiter=',', header=True):
+def load_data(csv_file_path, db_path, table_name='raw_data', auto_detect=True):
     """
     Loads data from a CSV file into DuckDB, checking if the table already exists.
-    Parameters:
-    csv_file_path (str): The file path of the CSV to load.
-    db_path (str): The DuckDB database file path.
-    table_name (str): The name of the table to create from the CSV data.
-    auto_detect (bool): Whether to use auto-detection for CSV format.
-    delimiter (str): The column delimiter (used if auto_detect is False).
-    header (bool): Indicates if the first row in CSV is a header (used if auto_detect is False).
     """
     try:
         with duckdb.connect(database=db_path) as con:
             if not table_exists(con, table_name):
-                if auto_detect:
-                    con.execute(f"CREATE TABLE {table_name} AS SELECT * FROM read_csv_auto('{csv_file_path}')")
-                else:
-                    con.execute(f"""
-                        CREATE TABLE {table_name} AS 
-                        SELECT * 
-                        FROM read_csv('{csv_file_path}', delimiter='{delimiter}', header={header})
-                    """)
-                print(f"Table {table_name} created and data loaded.")
+                query = f"CREATE TABLE {table_name} AS SELECT * FROM read_csv_auto('{csv_file_path}')" if auto_detect else f"CREATE TABLE {table_name} AS SELECT * FROM read_csv('{csv_file_path}')"
+                con.execute(query)
+                print(f"Table {table_name} created and data loaded into {db_path}.")
             else:
-                print(f"Table {table_name} already exists. No data loaded.")
+                print(f"Table {table_name} already exists in {db_path}. No data loaded.")
     except Exception as e:
-        print(f"Failed to load data: {e}")
+        print(f"Failed to load data from {csv_file_path} to {db_path}: {e}")
         raise e
+
+def process_multiple_months(months):
+    """
+    Processes multiple months and loads data into separate DuckDB instances.
+    """
+    base_csv_path = 'data/2019-{month}.csv'
+    base_db_path = 'db/2019-{month}.duckdb'
+    table_name = 'raw_data'
+
+    for month in months:
+        csv_file_path = base_csv_path.format(month=month)
+        db_path = base_db_path.format(month=month.lower())
+        print(f"Processing month: {month}")
+        load_data(csv_file_path, db_path, table_name)

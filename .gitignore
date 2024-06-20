@@ -3,6 +3,13 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Datastore files
+*.sqlite3
+*.db
+*.duckdb
+*.csv
+
+
 # C extensions
 *.so
 
