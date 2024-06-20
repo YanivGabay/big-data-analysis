@@ -1,4 +1,7 @@
-# big-data-analysis
+# ecommerce-big-data-analysis
+
+kaggle dataset:
+https://www.kaggle.com/datasets/mkechinov/ecommerce-behavior-data-from-multi-category-store/data?select=2019-Oct.csv
 
 
 ```
