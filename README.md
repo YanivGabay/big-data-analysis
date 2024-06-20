@@ -10,10 +10,11 @@ big_data_project/
 │   ├── loader.py
 │   ├── processor.py
 │   ├── analyzer.py
+|   ├── tester.py
 │   └── visualizer.py
 ├── utils/
 │   ├── __init__.py
-│   └── helpers.py
+│   └── logger.py
 ├── main.py
 └── requirements.txt
 ```
