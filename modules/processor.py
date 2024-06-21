@@ -24,11 +24,11 @@ def process_data(db_path, input_table_name, output_table_name):
         print(f"Error processing data in {db_path}: {e}")
         raise e
 
-def aggregate_sales(db_path, input_table_name):
+def aggregate_sales(db_path, input_table_name,output_table_name):
     try:
         with duckdb.connect(database=db_path) as con:
             con.execute(f"""
-                CREATE TABLE IF NOT EXISTS aggregated_sales AS
+                CREATE TABLE IF NOT EXISTS {output_table_name} AS
                 SELECT 
                     COUNT(*) AS total_events,
                     SUM(CASE WHEN event_type = 'purchase' THEN 1 ELSE 0 END) AS total_purchases,
@@ -39,7 +39,7 @@ def aggregate_sales(db_path, input_table_name):
                 WHERE price IS NOT NULL;
             """)
             print("Sales and event data aggregated and stored.")
-            print_table_info(con, "aggregated_sales")
+            print_table_info(con, output_table_name)
     except Exception as e:
         print(f"Error aggregating sales data in {db_path}: {e}")
         raise e

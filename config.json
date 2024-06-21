@@ -1,0 +1,12 @@
+{
+    "data_paths": {
+        "october": "db/2019-oct.duckdb",
+        "november": "db/2019-nov.duckdb"
+    },
+    "table_names": {
+        "raw_data": "raw_data",
+        "sales_data": "sales_data",
+        "aggregated_sales": "aggregated_sales"
+    },
+    "months": ["Oct", "Nov"]
+}

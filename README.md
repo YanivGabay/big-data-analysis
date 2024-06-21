@@ -53,10 +53,10 @@ This project aims to understand brand performance within the ecommerce platform.
 3. **Brand Popularity**: Which brands are the most popular among users?
 
 4. **User Engagement and Behavior Analysis**: this will explore a couple of things:
-- session duration
-- session frequency
-- num of purchaes per user
-- avg spending per session
+   - session duration
+   - session frequency
+   - num of purchaes per user
+   - avg spending per session
 
 ## Requirements
 
