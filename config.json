@@ -8,5 +8,15 @@
         "sales_data": "sales_data",
         "aggregated_sales": "aggregated_sales"
     },
+    "queries_dbs": {
+        "brands_performance": {
+            "october": "db/brands/2019-oct.db",
+            "november": "db/brands/2019-nov.db",
+            "table_names": {
+                "brands_performance_oct": "brands_performance_oct",
+                "brands_performance_nov": "brands_performance_nov"
+            }
+        }
+    },
     "months": ["Oct", "Nov"]
 }

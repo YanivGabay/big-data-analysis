@@ -44,19 +44,8 @@ big_data_project/
 
 ## Analytical Queries on Brands
 
-This project aims to understand brand performance within the ecommerce platform. Here are the key questions addressed through our analysis:
 
-1. **Brand Performance Comparison**: How do different brands perform month-over-month in terms of sales and customer purchases?
 
-2. **Seasonal Impact on Brands**: How do brand sales compare between the months of October and November?
-
-3. **Brand Popularity**: Which brands are the most popular among users?
-
-4. **User Engagement and Behavior Analysis**: this will explore a couple of things:
-   - session duration
-   - session frequency
-   - num of purchaes per user
-   - avg spending per session
 
 ## Requirements
 
@@ -64,6 +53,12 @@ This project aims to understand brand performance within the ecommerce platform.
 
 ```bash
 pip install -r requirements.txt
+```
+if you have some admin problems
+you can use :
+
+```bash
+pip install -r requirements.txt --user
 ```
 
 ## Installation

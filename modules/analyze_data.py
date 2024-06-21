@@ -1,7 +1,7 @@
 import duckdb
 import pandas as pd
 import sqlite3
-
+from modules.config_loader import config
 
 # at this point we have these tables in the duckdb databases:
 # - config.table_names.raw_data
@@ -13,6 +13,7 @@ import sqlite3
 def execute_query(db_path, query, params=None):
     """Executes a given SQL query on a specified DuckDB database."""
     try:
+
         con = duckdb.connect(database=db_path)
         if params:
             query = query.format(**params)  # Format query with additional parameters if provided
@@ -50,7 +51,30 @@ def save_df_to_sqlite(df: pd.DataFrame, db_path: str, table_name: str):
         print(f"Failed to save data to SQLite: {e}")
         raise
 
+def brand_performance_query():
+    query = """
+    SELECT
+        brand,
+        SUM(price) AS total_sales,
+        COUNT(*) AS total_purchases,
+        AVG(price) AS average_price
+    FROM
+        {table_name}
+    
+    WHERE 
+        event_type = 'purchase' AND
+        brand IS NOT NULL
+    GROUP BY
+        brand
 
+    ORDER BY
+       total_sales DESC
+  
+    """
+    df_nov = execute_query(config.data_paths.november, query, params={'table_name': config.table_names.raw_data})
+    df_oct = execute_query(config.data_paths.october, query, params={'table_name': config.table_names.raw_data})
+
+    return df_nov, df_oct
 
 
 

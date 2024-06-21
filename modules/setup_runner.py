@@ -3,7 +3,7 @@ from modules.loader import load_data
 from modules.tester import test_data
 from modules.loader import process_multiple_months
 from modules.processor import aggregate_sales, process_data
-from config_loader import config
+from modules.config_loader import config
 
 months = ['Oct', 'Nov']
 csv_file_path = 'data/2019-{month}.csv'

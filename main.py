@@ -2,7 +2,7 @@
 from pages import overview, interactive, static_graphs
 import streamlit as st
 
-from modules.setup_runner import get_months,setup_runner
+from modules.setup_runner import setup_runner
 
 st.set_page_config(page_title='Data Analysis Dashboard', layout='wide')
 def main():
