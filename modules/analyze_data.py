@@ -41,15 +41,6 @@ def execute_cross_db_query(db_path1, db_path2, query,params=None):
         con.close()
 
 
-def save_df_to_sqlite(df: pd.DataFrame, db_path: str, table_name: str):
-    """Saves a DataFrame to an SQLite database."""
-    try:
-        with sqlite3.connect(db_path) as conn:
-            df.to_sql(table_name, conn, if_exists='replace', index=False)
-        print(f"Data saved to {db_path} in table {table_name}")
-    except Exception as e:
-        print(f"Failed to save data to SQLite: {e}")
-        raise
 
 def brand_performance_query():
     query = """
