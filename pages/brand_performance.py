@@ -13,6 +13,14 @@ def show():
 def brand_performance():
     st.title('Brand Performance')
     st.write('This section provides an overview of the brand performance per each month.')
+    st.write("""
+    ### Functionality Overview
+    1. **Execute Brand Performance Query**: Retrieves data from the DuckDB database for both October and November.
+    2. **Save Data to SQLite**: Saves the queried data into separate SQLite databases for October and November.
+    3. **Load Top Brands**: Loads the top 25 brands based on total sales from the SQLite databases.
+    4. **Display Data**: Displays the data in Streamlit using a DataFrame.
+    5. **Create and Display Graphs**: Generates and displays bar charts for each month, showing both the total sales and the average price for each brand (with median lines).
+    """)
 
     Logger.info('Executing Brand Performance Query')
     df_nov, df_oct = brand_performance_query()
