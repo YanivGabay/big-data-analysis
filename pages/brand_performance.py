@@ -7,6 +7,9 @@ from modules.sqlite_manager import save_to_sqlite
 from utils.logger import Logger
 import matplotlib.pyplot as plt
 
+
+TOP = 50
+
 def show():
     brand_performance()
 
@@ -17,11 +20,13 @@ def brand_performance():
     ### Functionality Overview
     1. **Execute Brand Performance Query**: Retrieves data from the DuckDB database for both October and November.
     2. **Save Data to SQLite**: Saves the queried data into separate SQLite databases for October and November.
-    3. **Load Top Brands**: Loads the top 25 brands based on total sales from the SQLite databases.
+    3. **Load Top Brands**: Loads the top @TOP brands based on total sales from the SQLite databases.
     4. **Display Data**: Displays the data in Streamlit using a DataFrame.
     5. **Create and Display Graphs**: Generates and displays bar charts for each month, showing both the total sales and the average price for each brand (with median lines).
     """)
 
+
+    # this logic should be seperated , so it will be called a single time #######
     Logger.info('Executing Brand Performance Query')
     df_nov, df_oct = brand_performance_query()
     Logger.info('Brand Performance Query Executed')
@@ -29,9 +34,11 @@ def brand_performance():
 
     save_to_sqlite(df_oct, f"{config.queries_dbs.brands_performance.october}", config.queries_dbs.brands_performance.table_names.brands_performance_oct)
     save_to_sqlite(df_nov, f"{config.queries_dbs.brands_performance.november}", config.queries_dbs.brands_performance.table_names.brands_performance_nov)
+    ######### TILL HERE ##########
 
-    df_oct = load_top_brands(f"{config.queries_dbs.brands_performance.october}", config.queries_dbs.brands_performance.table_names.brands_performance_oct, 25)
-    df_nov = load_top_brands(f"{config.queries_dbs.brands_performance.november}", config.queries_dbs.brands_performance.table_names.brands_performance_nov, 25)
+    
+    df_oct = load_top_brands(f"{config.queries_dbs.brands_performance.october}", config.queries_dbs.brands_performance.table_names.brands_performance_oct, TOP)
+    df_nov = load_top_brands(f"{config.queries_dbs.brands_performance.november}", config.queries_dbs.brands_performance.table_names.brands_performance_nov, TOP)
 
     st.write('Brand Performance for October')
     st.dataframe(style_dataframe(df_oct))
@@ -48,7 +55,7 @@ def style_dataframe(df):
     styled_df = styled_df.map(lambda val: 'color: blue;' if val > df['average_price'].mean() else 'color: black;', subset=['average_price'])
     return styled_df
 
-def load_top_brands(sqlite_db_path, table_name, top=50):
+def load_top_brands(sqlite_db_path, table_name, top=TOP):
     with sqlite3.connect(sqlite_db_path) as conn:
         query = f"""
         SELECT 
