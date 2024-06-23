@@ -10,6 +10,7 @@ def save_to_sqlite(df, db_path, table_name):
     try:
         with sqlite3.connect(db_path) as conn:
             df.to_sql(table_name, conn, if_exists='replace', index=False)
+       
         Logger.info(f"Data saved to SQLite database at {db_path}")
     except Exception as e:
         Logger.error(f"Error saving data to SQLite database: {str(e)}")
