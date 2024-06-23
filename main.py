@@ -1,5 +1,5 @@
 
-from pages import overview, interactive, static_graphs , brand_performance
+from pages import overview, interactive, static_graphs , brand_performance , user_retention
 import streamlit as st
 
 from modules.setup_runner import setup_runner
@@ -12,7 +12,7 @@ def main():
       
         # Setup sidebar for navigation
         st.sidebar.title('Navigation')
-        choice = st.sidebar.selectbox('Choose a page:', ['Overview', 'Interactive Graphs', 'Static Graphs', 'Brand Performance'])
+        choice = st.sidebar.selectbox('Choose a page:', ['Overview', 'Interactive Graphs', 'Static Graphs', 'Brand Performance', 'User Retention'])
 
         # Load and process data only once and not reload on navigation change
         if 'data_loaded' not in st.session_state:
@@ -30,6 +30,8 @@ def main():
             static_graphs.show()
         elif choice == 'Brand Performance':
             brand_performance.show()
+        elif choice == 'User Retention':
+            user_retention.show()
             
 
   

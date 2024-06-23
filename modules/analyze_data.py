@@ -67,6 +67,36 @@ def brand_performance_query():
 
     return df_nov, df_oct
 
+def user_retention_query():
+    query = """
+    WITH First_Last_Activities AS (
+        SELECT
+            user_id,
+            MIN(event_time) AS first_activity,
+            MAX(event_time) AS last_activity,
+            COUNT(*) AS total_events,
+            SUM(CASE WHEN event_type = 'purchase' THEN 1 ELSE 0 END) AS purchase_count
+        FROM {table_name}
+        GROUP BY user_id
+    ),
+    Retention_Analysis AS (
+        SELECT
+            user_id,
+            DATEDIFF('days', first_activity, last_activity) AS retention_days,  -- Specify 'days' as the unit
+            purchase_count
+        FROM First_Last_Activities
+    )
+    SELECT
+        AVG(retention_days) AS avg_retention_days,
+        COUNT(*) AS total_users,
+        AVG(purchase_count) AS avg_purchase_frequency
+    FROM Retention_Analysis
+    WHERE retention_days > 0;
 
+    """
+    df_nov = execute_query(config.data_paths.november, query, params={'table_name': config.table_names.raw_data})
+    df_oct = execute_query(config.data_paths.october, query, params={'table_name': config.table_names.raw_data})
+
+    return df_nov, df_oct
 
 

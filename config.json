@@ -16,7 +16,16 @@
                 "brands_performance_oct": "brands_performance_oct",
                 "brands_performance_nov": "brands_performance_nov"
             }
+        },
+        "user_retention": {
+            "october": "db/user_retention/2019-oct.db",
+            "november": "db/user_retention/2019-nov.db",
+            "table_names": {
+                "user_retention_oct": "user_retention_oct",
+                "user_retention_nov": "user_retention_nov"
+            }
         }
+
     },
     "months": ["Oct", "Nov"]
 }

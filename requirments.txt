@@ -4,5 +4,5 @@ duckdb==1.0.0
 pandas==2.2.2
 numpy==1.23.2
 matplotlib==3.9.0
-streamlit==1.35.0
+streamlit==1.36.0
 plotly==5.22.0

@@ -1,11 +1,15 @@
 from dataclasses import dataclass
 import json
 
-# Define your data class for the queries' database paths
 @dataclass
 class BrandPerformanceTableNames:
     brands_performance_oct: str
     brands_performance_nov: str
+
+@dataclass
+class UserRetentionTableNames:
+    user_retention_oct: str
+    user_retention_nov: str
 
 @dataclass
 class BrandDatabases:
@@ -13,12 +17,17 @@ class BrandDatabases:
     november: str
     table_names: BrandPerformanceTableNames
 
-# Define your data class for all queries' databases
+@dataclass
+class UserRetentionDatabases:
+    october: str
+    november: str
+    table_names: UserRetentionTableNames
+
 @dataclass
 class QueriesDbs:
     brands_performance: BrandDatabases
+    user_retention: UserRetentionDatabases
 
-# Define your data classes for other configurations
 @dataclass
 class DatabaseConfig:
     october: str
@@ -30,7 +39,6 @@ class TableNames:
     sales_data: str
     aggregated_sales: str
 
-# Define a top-level configuration data class that includes everything
 @dataclass
 class Config:
     data_paths: DatabaseConfig
@@ -45,14 +53,17 @@ def load_config(config_path: str = 'config.json') -> Config:
         data_paths = DatabaseConfig(**config_dict['data_paths'])
         table_names = TableNames(**config_dict['table_names'])
         
-        # Extract table names separately
+        # Brand Performance
         brand_performance_table_names = BrandPerformanceTableNames(**config_dict['queries_dbs']['brands_performance']['table_names'])
-        
-        # Exclude table names from the dictionary before passing it to BrandDatabases
         brands_performance_dict = {k: v for k, v in config_dict['queries_dbs']['brands_performance'].items() if k != 'table_names'}
         brands_performance_dbs = BrandDatabases(**brands_performance_dict, table_names=brand_performance_table_names)
         
-        queries_dbs = QueriesDbs(brands_performance=brands_performance_dbs)
+        # User Retention
+        user_retention_table_names = UserRetentionTableNames(**config_dict['queries_dbs']['user_retention']['table_names'])
+        user_retention_dict = {k: v for k, v in config_dict['queries_dbs']['user_retention'].items() if k != 'table_names'}
+        user_retention_dbs = UserRetentionDatabases(**user_retention_dict, table_names=user_retention_table_names)
+        
+        queries_dbs = QueriesDbs(brands_performance=brands_performance_dbs, user_retention=user_retention_dbs)
         
         months = config_dict['months']
 
