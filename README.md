@@ -24,22 +24,49 @@ The dataset used in this project can be found on Kaggle:
 
 ## Project Structure
 
+
 ```
-big_data_project/
-├── data/
-├── db/
-├── modules/
+Ecommerce_Big_Data_Analysis/
+├── .gitignore
+├── .streamlit/
+│   └── config.toml
+├── data/            # Contains the datasets
+│   ├── 2019-Nov.csv - 
+│   └── 2019-Oct.csv - 
+├── db/         # Contains the SQLite and Duckdb databases
+│   ├── 2019-nov.duckdb
+│   ├── 2019-oct.duckdb
+│   ├── aggregated_sales/
+│   ├── brands/
+│   ├── sales_data/
+│   ├── shared_user_activity_by_hour/
+│   ├── top_products/
+│   └── user_retention/
+├── modules/  
 │   ├── __init__.py
-│   ├── loader.py         # For loading data into the system
-│   ├── processor.py      # For processing and preparing data
-│   ├── analyzer.py       # For performing data analysis
-│   ├── tester.py         # For testing data quality and integrity
-│   └── visualizer.py     # For creating visualizations
-├── utils/
-│   ├── __init__.py
-│   └── logger.py         # Utility for logging events
-├── main.py               # Main script to run analyses
-└── requirements.txt      # Required Python packages
+│   ├── aggregate_sales_result.py
+│   ├── analyze_data.py
+│   ├── config_loader.py
+│   ├── loader.py
+│   ├── processor.py
+│   ├── setup_runner.py
+│   ├── sqlite_manager.py
+│   └── tester.py
+    └── page_data_manager.py
+├── pages/      # Contains the Streamlit pages
+│   ├── brand_performance.py
+│   ├── events_activities_by_hour.py
+│   ├── overview.py
+│   ├── static_graphs.py
+│   ├── top_prods.py
+│   └── user_retention.py
+├── utils/      
+│   └── logger.py
+├── config.json      # Contains the configuration settings, filepaths etc.
+├── main.py
+├── README.md
+├── requirements.txt
+
 ```
 
 ## Analytical Queries on Brands

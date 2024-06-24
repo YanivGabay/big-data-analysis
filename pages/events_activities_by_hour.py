@@ -13,7 +13,7 @@ from utils.logger import Logger
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
-
+from modules.page_data_manager import PageDataManager
 
 shared_user_activity_by_hour_db_path = f"{config.databases.shared_user_activity_by_hour.db_path}"
 shared_user_activity_by_hour_table_name = f"{config.databases.shared_user_activity_by_hour.table_name}"
@@ -21,28 +21,23 @@ shared_user_activity_by_hour_table_name = f"{config.databases.shared_user_activi
 
 
 def show():
-    setup_user_ret()
+    setup()
     activities_by_hour()
 
-def setup_user_ret():
-    """
-    This function is called to set up activities by hour. It processes data only once per session.
-    """
-    if 'activities_by_hour_data' not in st.session_state:
-        Logger.info("Setting up activities by hour...")
-   
-        setup_data()  
-        Logger.info("activities by hour setup completed.")
-        st.session_state['activities_by_hour_data'] = True  # Mark data as prepared
+def setup():
+    if PageDataManager.get_state(shared_user_activity_by_hour_db_path):
+        return
+    if PageDataManager.check_db_exists(shared_user_activity_by_hour_db_path):
+        return
     
-
+    setup_data()
+  
 def setup_data():
-   
-    Logger.info('Executing activities_by_hour_query Query')
+        
     df_both = activities_by_hour_query()
-    Logger.info('Trying to save data to SQLite')
-
+    
     save_to_sqlite(df_both, f"{shared_user_activity_by_hour_db_path}", shared_user_activity_by_hour_table_name)
+
 
 def activities_by_hour():
     st.title('User Activities by Hour')
