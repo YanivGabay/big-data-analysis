@@ -33,11 +33,6 @@ def setup_data():
    
     Logger.info('Executing Brand Performance Query')
     df_nov, df_oct = brand_performance_query()
-    Logger.info(f"October data: {df_oct.shape[0]} rows, {df_oct.shape[1]} columns")
-    Logger.info(f"November data: {df_nov.shape[0]} rows, {df_nov.shape[1]} columns")
-    Logger.info('Df headers:')
-    Logger.info(df_oct.head())
-    Logger.info(df_nov.head())
     Logger.info('Brand Performance Query Executed')
     Logger.info('Trying to save data to SQLite')
 

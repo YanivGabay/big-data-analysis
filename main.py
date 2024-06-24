@@ -1,5 +1,5 @@
 
-from pages import overview, interactive, static_graphs , brand_performance , user_retention, events_activities_by_hour, top_prods
+from pages import overview,  static_graphs , brand_performance , user_retention, events_activities_by_hour, top_prods
 import streamlit as st
 
 from modules.setup_runner import setup_runner
@@ -14,7 +14,7 @@ def main():
         st.sidebar.title('Navigation')
         choice = st.sidebar.selectbox(
             'Choose a page:',
-              ['Overview', 'Interactive Graphs', 'Static Graphs', 'Brand Performance',
+              ['Overview', 'Static Graphs', 'Brand Performance',
                 'User Retention', 'User Activities by Hour','Top Products'])
         
         
@@ -29,8 +29,7 @@ def main():
         # Show aggregated data on a dedicated page or under a condition
         if choice == 'Overview':
             overview.show()
-        elif choice == 'Interactive Graphs':
-            interactive.show()
+       
         elif choice == 'Static Graphs':
             static_graphs.show()
         elif choice == 'Brand Performance':

@@ -46,13 +46,21 @@ def setup_data():
 
 def activities_by_hour():
     st.title('User Activities by Hour')
-    st.write('This section provides an overview of user activities by hour.')
+    st.write('Explore the dynamics of user activities throughout the day and how these patterns shift between months.')
     st.write("""
-    ### Functionality Overview
-    1. **Execute User Activities by Hour Query**: Retrieves data from the minified sqlite database.
-    
-            
+    ### Overview and Steps:
+    - **Data Retrieval**: Data concerning user activities logged each hour is extracted from a comprehensive database.
+    - **Data Processing**: This raw data is processed to categorize activities by type, such as viewing products, adding items to carts, and making purchases, and then summarized by each hour of the day.
+    - **Data Visualization**: Various visualizations are provided to illustrate the trends and differences in user activities:
+        - **Hourly Activity Heatmaps**: Shows the concentration of different types of user activities throughout the day. Each activity type is normalized across the day for better comparability, highlighting peak hours.
+        - **Event Type Distribution Charts**: These stacked bar charts compare the distribution of activity types between two months, showcasing how user behavior changes over time.
+    - **User Interaction**: You can filter the visualizations by selecting specific activity types from a dropdown menu, focusing on particular aspects of user behavior.
+
+    ### Select Event Type:
+    Use the dropdown to filter activities by event type or view all activities to gain insights into specific or overall user engagements.
     """)
+
+
 
 
     df = get_activities_by_hour()

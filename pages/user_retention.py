@@ -22,30 +22,19 @@ def show():
     user_retention()
 
 def setup_user_ret():
-    """
-    This function is called to set up brand data. It processes data only once per session.
-    """
+    """Set up user retention data, ensuring it is only processed once per session."""
     if 'user_retention_data' not in st.session_state:
-        Logger.info("Setting up brand data...")
-   
-        setup_data()  
-        Logger.info("Brand data setup completed.")
-        st.session_state['user_retention_data'] = True  # Mark data as prepared
+        Logger.info("Setting up user retention data...")
+        setup_data()
+        st.session_state['user_retention_data'] = True
 
 def setup_data():
-   
-    Logger.info('Executing user_retention_query Query')
+    """Execute queries to fetch and save user retention data."""
+    Logger.info('Executing User Retention Query')
     df_nov, df_oct = user_retention_query()
-    Logger.info(f"October data: {df_oct.shape[0]} rows, {df_oct.shape[1]} columns")
-    Logger.info(f"November data: {df_nov.shape[0]} rows, {df_nov.shape[1]} columns")
-    Logger.info('Df headers:')
-    Logger.info(df_oct.head())
-    Logger.info(df_nov.head())
-    Logger.info(' Executed')
-    Logger.info('Trying to save data to SQLite')
-
-    save_to_sqlite(df_oct, f"{october_db_path}", october_table_name)
-    save_to_sqlite(df_nov, f"{november_db_path}", november_table_name)
+    save_to_sqlite(df_oct, october_db_path, october_table_name)
+    save_to_sqlite(df_nov, november_db_path, november_table_name)
+    Logger.info('User Retention Data Prepared and Saved')
    
 
 
@@ -75,8 +64,8 @@ def user_retention():
     Logger.info('Loaded October and November User Retention Data')
 
     st.write('#### Joining October and November Data for Comparison')
-    if df_oct is not None and df_nov is not None:
-        plot_user_retention(df_oct, df_nov)
+   
+    plot_user_retention(df_oct, df_nov)
 
 
 def plot_user_retention_separate(df_oct, df_nov):
@@ -127,14 +116,9 @@ def plot_user_retention(df_oct, df_nov):
 def load_monthly_user_retention(db_path, table_name):
     try:
 
-
-  
         query = f"SELECT * FROM {table_name}"
         df = execute_query_to_df(db_path, query)
     
-
-
-        
         return df
     except Exception as e:
         Logger.error(f"Error loading data from SQLite database: {str(e)}")

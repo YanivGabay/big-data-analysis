@@ -25,6 +25,9 @@ def execute_query_to_df(db_path, query):
         df = pd.read_sql(query, conn)
         Logger.info(f"Query executed successfully on {db_path}")
         return df   
+    
+    except FileExistsError as e:
+        Logger.info(f"Warning on executing query on {db_path}: {str(e)}")
     except Exception as e:
         Logger.error(f"Error executing query on {db_path}: {str(e)}")
         return None
