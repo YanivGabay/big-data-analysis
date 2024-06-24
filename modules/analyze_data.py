@@ -35,6 +35,7 @@ def execute_cross_db_query(db_path1, db_path2, query,params=None):
         query = query.format(**params) if params else query  # Format the query with additional parameters if provided
         df = con.execute(query).df()
         Logger.info("Cross-database query executed successfully.")
+        con.execute("DETACH db2")  # Detach the second database
         return df
     except Exception as e:
         print(f"Failed to execute cross-database query: {e}")
