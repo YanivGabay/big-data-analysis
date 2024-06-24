@@ -1,35 +1,48 @@
 from dataclasses import dataclass
 import json
+from dataclasses import dataclass
+{
+    "data_paths": {
+        "october": "db/2019-oct.duckdb",
+        "november": "db/2019-nov.duckdb"
+    },
+    "table_names": {
+        "raw_data": "raw_data",
+        "sales_data": "sales_data",
+        "aggregated_sales": "aggregated_sales"
+    },
+    "databases": {
+        "brands_performance": {
+            "october": {
+                "db_path": "db/brands/2019-oct.db",
+                "table_name": "brands_performance_oct"
+            },
+            "november": {
+                "db_path": "db/brands/2019-nov.db",
+                "table_name": "brands_performance_nov"
+            }
+        },
+        "user_retention": {
+            "october": {
+                "db_path": "db/user_retention/2019-oct.db",
+                "table_name": "user_retention_oct"
+            },
+            "november": {
+                "db_path": "db/user_retention/2019-nov.db",
+                "table_name": "user_retention_nov"
+            }
+        },
+        "shared_user_activity_by_hour": {
+            "db_path": "db/shared_user_activity_by_hour/2019-shared.db",
+            "table_name": "shared_user_activity_by_hour_nov"
+           
+        }
+    },
+    "months": ["Oct", "Nov"]
+}
 
 @dataclass
-class BrandPerformanceTableNames:
-    brands_performance_oct: str
-    brands_performance_nov: str
-
-@dataclass
-class UserRetentionTableNames:
-    user_retention_oct: str
-    user_retention_nov: str
-
-@dataclass
-class BrandDatabases:
-    october: str
-    november: str
-    table_names: BrandPerformanceTableNames
-
-@dataclass
-class UserRetentionDatabases:
-    october: str
-    november: str
-    table_names: UserRetentionTableNames
-
-@dataclass
-class QueriesDbs:
-    brands_performance: BrandDatabases
-    user_retention: UserRetentionDatabases
-
-@dataclass
-class DatabaseConfig:
+class DatabasePaths:
     october: str
     november: str
 
@@ -40,34 +53,61 @@ class TableNames:
     aggregated_sales: str
 
 @dataclass
+class DatabaseDetails:
+    db_path: str
+    table_name: str
+
+@dataclass
+class BrandPerformance:
+    october: DatabaseDetails
+    november: DatabaseDetails
+
+@dataclass
+class UserRetention:
+    october: DatabaseDetails
+    november: DatabaseDetails
+
+@dataclass
+class SharedUserActivityByHour:
+    db_path: str
+    table_name: str
+
+@dataclass
+class Databases:
+    brands_performance: BrandPerformance
+    user_retention: UserRetention
+    shared_user_activity_by_hour: SharedUserActivityByHour
+
+@dataclass
 class Config:
-    data_paths: DatabaseConfig
+    data_paths: DatabasePaths
     table_names: TableNames
-    queries_dbs: QueriesDbs
+    databases: Databases
     months: list
+
+
+
 
 def load_config(config_path: str = 'config.json') -> Config:
     with open(config_path, 'r') as file:
         config_dict = json.load(file)
-        
-        data_paths = DatabaseConfig(**config_dict['data_paths'])
-        table_names = TableNames(**config_dict['table_names'])
-        
-        # Brand Performance
-        brand_performance_table_names = BrandPerformanceTableNames(**config_dict['queries_dbs']['brands_performance']['table_names'])
-        brands_performance_dict = {k: v for k, v in config_dict['queries_dbs']['brands_performance'].items() if k != 'table_names'}
-        brands_performance_dbs = BrandDatabases(**brands_performance_dict, table_names=brand_performance_table_names)
-        
-        # User Retention
-        user_retention_table_names = UserRetentionTableNames(**config_dict['queries_dbs']['user_retention']['table_names'])
-        user_retention_dict = {k: v for k, v in config_dict['queries_dbs']['user_retention'].items() if k != 'table_names'}
-        user_retention_dbs = UserRetentionDatabases(**user_retention_dict, table_names=user_retention_table_names)
-        
-        queries_dbs = QueriesDbs(brands_performance=brands_performance_dbs, user_retention=user_retention_dbs)
-        
-        months = config_dict['months']
+    return Config(
+        data_paths=DatabasePaths(**config_dict['data_paths']),
+        table_names=TableNames(**config_dict['table_names']),
+        databases=Databases(
+            brands_performance=BrandPerformance(
+                october=DatabaseDetails(**config_dict['databases']['brands_performance']['october']),
+                november=DatabaseDetails(**config_dict['databases']['brands_performance']['november'])
+            ),
+            user_retention=UserRetention(
+                october=DatabaseDetails(**config_dict['databases']['user_retention']['october']),
+                november=DatabaseDetails(**config_dict['databases']['user_retention']['november'])
+            ),
+            shared_user_activity_by_hour=SharedUserActivityByHour(**config_dict['databases']['shared_user_activity_by_hour'])
+        ),
+        months=config_dict['months']
+    )
 
-        return Config(data_paths=data_paths, table_names=table_names, queries_dbs=queries_dbs, months=months)
 
 # Load the configuration once and use it across the application
 config = load_config()

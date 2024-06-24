@@ -2,7 +2,7 @@ import duckdb
 import pandas as pd
 import sqlite3
 from modules.config_loader import config
-
+from utils.logger import Logger
 # at this point we have these tables in the duckdb databases:
 # - config.table_names.raw_data
 # - config.table_names.sales_data
@@ -28,11 +28,13 @@ def execute_query(db_path, query, params=None):
 
 def execute_cross_db_query(db_path1, db_path2, query,params=None):
     try:
+        Logger.info(f"Executing cross-database query on {db_path1} and {db_path2}")
         con = duckdb.connect(database=db_path1)  # Connect to the primary database
         con.execute(f"ATTACH '{db_path2}' AS db2")  # Attach the second database as 'db2'
         
         query = query.format(**params) if params else query  # Format the query with additional parameters if provided
         df = con.execute(query).df()
+        Logger.info("Cross-database query executed successfully.")
         return df
     except Exception as e:
         print(f"Failed to execute cross-database query: {e}")
@@ -41,8 +43,41 @@ def execute_cross_db_query(db_path1, db_path2, query,params=None):
         con.close()
 
 
-    
-
+def activities_by_hour_query():
+    query = """
+    WITH hourly_activity_oct AS (
+        SELECT 
+            strftime('%H', event_time) AS hour,
+            event_type,
+            COUNT(*) AS event_count
+        FROM {table_name}
+        WHERE CAST(event_time AS DATE) BETWEEN '2019-10-01' AND '2019-10-31'
+        GROUP BY strftime('%H', event_time), event_type
+    ),
+    hourly_activity_nov AS (
+        SELECT 
+            strftime('%H', event_time) AS hour,
+            event_type,
+            COUNT(*) AS event_count
+        FROM db2.{table_name}  -- Use the alias for the November database
+        WHERE CAST(event_time AS DATE) BETWEEN '2019-11-01' AND '2019-11-30'
+        GROUP BY strftime('%H', event_time), event_type
+    )
+    SELECT 
+        COALESCE(hourly_activity_oct.hour, hourly_activity_nov.hour) AS hour,
+        COALESCE(hourly_activity_oct.event_type, hourly_activity_nov.event_type) AS event_type,
+        COALESCE(hourly_activity_oct.event_count, 0) AS event_count_oct,
+        COALESCE(hourly_activity_nov.event_count, 0) AS event_count_nov
+    FROM 
+        hourly_activity_oct
+        FULL OUTER JOIN 
+        hourly_activity_nov
+        ON 
+        hourly_activity_oct.hour = hourly_activity_nov.hour 
+        AND hourly_activity_oct.event_type = hourly_activity_nov.event_type;
+    """
+    df_both = execute_cross_db_query(config.data_paths.october, config.data_paths.november, query, params={'table_name': config.table_names.raw_data})
+    return df_both
 
 def brand_performance_query():
     query = """

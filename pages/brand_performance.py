@@ -9,6 +9,11 @@ import matplotlib.pyplot as plt
 from modules.sqlite_manager import execute_query_to_df
 TOP = 50
 
+october_db_path = f"{config.databases.brands_performance.october.db_path}"
+november_db_path = f"{config.databases.brands_performance.november.db_path}"
+october_table_name = f"{config.databases.brands_performance.october.table_name}"
+november_table_name = f"{config.databases.brands_performance.november.table_name}"
+
 def show():
     setup_brand_data()
     brand_performance()
@@ -36,8 +41,10 @@ def setup_data():
     Logger.info('Brand Performance Query Executed')
     Logger.info('Trying to save data to SQLite')
 
-    save_to_sqlite(df_oct, f"{config.queries_dbs.brands_performance.october}", config.queries_dbs.brands_performance.table_names.brands_performance_oct)
-    save_to_sqlite(df_nov, f"{config.queries_dbs.brands_performance.november}", config.queries_dbs.brands_performance.table_names.brands_performance_nov)
+    save_to_sqlite(df_oct, f"{october_db_path}",
+                   october_table_name)
+    save_to_sqlite(df_nov, f"{november_db_path}", 
+                  november_table_name)
    
 
 def brand_performance():
@@ -56,8 +63,8 @@ def brand_performance():
     top_brands = st.slider('Select how many top brands to display:', min_value=10, max_value=100, value=25, step=5)
 
 
-    df_oct = load_top_brands(f"{config.queries_dbs.brands_performance.october}", config.queries_dbs.brands_performance.table_names.brands_performance_oct, top_brands)
-    df_nov = load_top_brands(f"{config.queries_dbs.brands_performance.november}", config.queries_dbs.brands_performance.table_names.brands_performance_nov, top_brands)
+    df_oct = load_top_brands(f"{october_db_path}", october_table_name, top_brands)
+    df_nov = load_top_brands(f"{november_db_path}", november_table_name, top_brands)
 
 
 

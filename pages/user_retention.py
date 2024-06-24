@@ -9,6 +9,14 @@ import matplotlib.pyplot as plt
 from modules.sqlite_manager import execute_query_to_df
 import numpy as np
 
+october_db_path = f"{config.databases.user_retention.october.db_path}"
+november_db_path = f"{config.databases.user_retention.november.db_path}"
+october_table_name = f"{config.databases.user_retention.october.table_name}"
+november_table_name = f"{config.databases.user_retention.november.table_name}"
+
+
+
+
 def show():
     setup_user_ret()
     user_retention()
@@ -36,8 +44,8 @@ def setup_data():
     Logger.info(' Executed')
     Logger.info('Trying to save data to SQLite')
 
-    save_to_sqlite(df_oct, f"{config.queries_dbs.user_retention.october}", config.queries_dbs.user_retention.table_names.user_retention_oct)
-    save_to_sqlite(df_nov, f"{config.queries_dbs.user_retention.november}", config.queries_dbs.user_retention.table_names.user_retention_nov)
+    save_to_sqlite(df_oct, f"{october_db_path}", october_table_name)
+    save_to_sqlite(df_nov, f"{november_db_path}", november_table_name)
    
 
 
@@ -54,15 +62,16 @@ def user_retention():
     4. **Compare Data**: Compares the user retention metrics between October and November, displaying the results in a bar chart.
    
              
-             ### User Retention Metrics
+    ### User Retention Metrics
+             
     - **Average Retention Days**: The average number of days that users remain active.
     - **Total Users**: The total number of users who have been active.
     - **Average Purchase Frequency**: The average number of purchases made by users.
              
     """)
     Logger.info('Loading October and November User Retention Data')
-    df_oct = load_monthly_user_retention(f"{config.queries_dbs.user_retention.october}", config.queries_dbs.user_retention.table_names.user_retention_oct)
-    df_nov = load_monthly_user_retention(f"{config.queries_dbs.user_retention.november}", config.queries_dbs.user_retention.table_names.user_retention_nov)
+    df_oct = load_monthly_user_retention(f"{october_db_path}", october_table_name)
+    df_nov = load_monthly_user_retention(f"{november_db_path}", november_table_name)
     Logger.info('Loaded October and November User Retention Data')
 
     st.write('#### Joining October and November Data for Comparison')

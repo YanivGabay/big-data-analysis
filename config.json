@@ -8,24 +8,32 @@
         "sales_data": "sales_data",
         "aggregated_sales": "aggregated_sales"
     },
-    "queries_dbs": {
+    "databases": {
         "brands_performance": {
-            "october": "db/brands/2019-oct.db",
-            "november": "db/brands/2019-nov.db",
-            "table_names": {
-                "brands_performance_oct": "brands_performance_oct",
-                "brands_performance_nov": "brands_performance_nov"
+            "october": {
+                "db_path": "db/brands/2019-oct.db",
+                "table_name": "brands_performance_oct"
+            },
+            "november": {
+                "db_path": "db/brands/2019-nov.db",
+                "table_name": "brands_performance_nov"
             }
         },
         "user_retention": {
-            "october": "db/user_retention/2019-oct.db",
-            "november": "db/user_retention/2019-nov.db",
-            "table_names": {
-                "user_retention_oct": "user_retention_oct",
-                "user_retention_nov": "user_retention_nov"
+            "october": {
+                "db_path": "db/user_retention/2019-oct.db",
+                "table_name": "user_retention_oct"
+            },
+            "november": {
+                "db_path": "db/user_retention/2019-nov.db",
+                "table_name": "user_retention_nov"
             }
+        },
+        "shared_user_activity_by_hour": {
+            "db_path": "db/shared_user_activity_by_hour/2019-shared.db",
+            "table_name": "shared_user_activity_by_hour"
+           
         }
-
     },
     "months": ["Oct", "Nov"]
 }
