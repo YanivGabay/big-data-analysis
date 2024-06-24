@@ -86,7 +86,7 @@ def top_prod_compare_query():
         
 
     """
-    df_both = execute_cross_db_query(config.data_paths.october, config.data_paths.november, query, params={'table_name_oct': config.table_names.raw_data, 'table_name_nov': config.table_names.raw_data})
+    df_both = execute_cross_db_query(config.data_paths.october, config.data_paths.november, query, params={'table_name': config.table_names.raw_data})
     return df_both
 
 def activities_by_hour_query():

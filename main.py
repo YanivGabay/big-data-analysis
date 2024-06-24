@@ -12,7 +12,12 @@ def main():
       
         # Setup sidebar for navigation
         st.sidebar.title('Navigation')
-        choice = st.sidebar.selectbox('Choose a page:', ['Overview', 'Interactive Graphs', 'Static Graphs', 'Brand Performance', 'User Retention', 'User Activities by Hour'])
+        choice = st.sidebar.selectbox(
+            'Choose a page:',
+              ['Overview', 'Interactive Graphs', 'Static Graphs', 'Brand Performance',
+                'User Retention', 'User Activities by Hour','Top Products'])
+        
+        
         container = st.container(border=True)
         # Load and process data only once and not reload on navigation change
         if 'data_loaded' not in st.session_state:
