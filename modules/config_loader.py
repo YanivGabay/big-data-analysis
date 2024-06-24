@@ -39,11 +39,23 @@ class SharedUserActivityByHour:
     table_name: str
 
 @dataclass
+class AggregateSales:
+    october: DatabaseDetails
+    november: DatabaseDetails
+
+@dataclass
+class UserAggSales:
+    october: DatabaseDetails
+    november: DatabaseDetails
+
+@dataclass
 class Databases:
     brands_performance: BrandPerformance
     user_retention: UserRetention
     shared_user_activity_by_hour: SharedUserActivityByHour
     top_products: TopProds
+    aggregated_sales: AggregateSales
+    sales_data: UserAggSales
 
 @dataclass
 class Config:
@@ -71,7 +83,16 @@ def load_config(config_path: str = 'config.json') -> Config:
                 november=DatabaseDetails(**config_dict['databases']['user_retention']['november'])
             ),
             shared_user_activity_by_hour=SharedUserActivityByHour(**config_dict['databases']['shared_user_activity_by_hour']),
-            top_products=TopProds(**config_dict['databases']['top_products'])
+            top_products=TopProds(**config_dict['databases']['top_products']),
+            aggregated_sales=AggregateSales(
+                october=DatabaseDetails(**config_dict['databases']['aggregated_sales']['october']),
+                november=DatabaseDetails(**config_dict['databases']['aggregated_sales']['november'])
+            ),
+            sales_data=UserAggSales(
+                october=DatabaseDetails(**config_dict['databases']['sales_data']['october']),
+                november=DatabaseDetails(**config_dict['databases']['sales_data']['november'])
+            )
+
         ),
         months=config_dict['months']
     )

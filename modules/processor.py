@@ -1,13 +1,12 @@
 import duckdb
 from utils.logger import Logger
-
+import pandas as pd
 
 def process_data(db_path, input_table_name, output_table_name):
     try:
         Logger.section_header(f"Processing data in {db_path}...")
         with duckdb.connect(database=db_path) as con:
-            con.execute(f"""
-                CREATE TABLE IF NOT EXISTS {output_table_name} AS
+            df = con.execute(f"""
                 SELECT 
                     user_id, 
                     COUNT(*) AS total_events, 
@@ -16,10 +15,11 @@ def process_data(db_path, input_table_name, output_table_name):
                 FROM {input_table_name}
                 WHERE price IS NOT NULL
                 GROUP BY user_id;
-            """)
-            Logger.info(f"Data has been processed and stored in {output_table_name}.")
-           
+            """).df()
+            Logger.info(f"Sales Data has been processed.")
+            
             print_table_info(con, output_table_name)
+            return df
     except Exception as e:
         print(f"Error processing data in {db_path}: {e}")
         raise e
@@ -27,8 +27,7 @@ def process_data(db_path, input_table_name, output_table_name):
 def aggregate_sales(db_path, input_table_name,output_table_name):
     try:
         with duckdb.connect(database=db_path) as con:
-            con.execute(f"""
-                CREATE TABLE IF NOT EXISTS {output_table_name} AS
+            df = con.execute(f"""
                 SELECT 
                     COUNT(*) AS total_events,
                     SUM(CASE WHEN event_type = 'purchase' THEN 1 ELSE 0 END) AS total_purchases,
@@ -37,14 +36,15 @@ def aggregate_sales(db_path, input_table_name,output_table_name):
                     AVG(price) AS average_price
                 FROM {input_table_name}
                 WHERE price IS NOT NULL;
-            """)
+            """).df()
             print("Sales and event data aggregated and stored.")
             print_table_info(con, output_table_name)
+
+            return df
     except Exception as e:
         print(f"Error aggregating sales data in {db_path}: {e}")
         raise e
-import duckdb
-import pandas as pd
+
 
 def print_table_info(con, table_name):
     """

@@ -9,6 +9,26 @@
         "aggregated_sales": "aggregated_sales"
     },
     "databases": {
+        "sales_data": {
+            "october": {
+                "db_path": "db/sales_data/2019-oct.db",
+                "table_name": "sales_data_oct"
+            },
+            "november": {
+                "db_path": "db/sales_data/2019-nov.db",
+                "table_name": "sales_data_nov"
+            }
+        },
+        "aggregated_sales" : {
+            "october": {
+                "db_path": "db/aggregated_sales/2019-oct.db",
+                "table_name": "aggregated_sales_oct"
+            },
+            "november": {
+                "db_path": "db/aggregated_sales/2019-nov.db",
+                "table_name": "aggregated_sales_nov"
+            }
+        },
         "brands_performance": {
             "october": {
                 "db_path": "db/brands/2019-oct.db",

@@ -1,14 +1,14 @@
 import streamlit as st
 
 import duckdb
-from modules.analyze_data import execute_query
+from modules.sqlite_manager import execute_query_to_df
 from modules.config_loader import config
 
 class AggregateSalesResult:
 
-    def __init__(self, db_path, table_name, aggregate_sales_table_name,month):
+    def __init__(self, db_path,aggregate_sales_table_name,month):
         self.db_path = db_path
-        self.table_name = table_name
+   
         self.aggregate_sales_table_name = aggregate_sales_table_name
         self.month = month
         self.df = self.fetch_aggregated_data()
@@ -25,7 +25,7 @@ class AggregateSalesResult:
     def fetch_aggregated_data(self):
         try:
             query = f"SELECT * FROM {self.aggregate_sales_table_name}"
-            df = execute_query(self.db_path, query)
+            df = execute_query_to_df(self.db_path, query)
             return df
         except Exception as e:
             st.error(f"Failed to fetch data: {e}")

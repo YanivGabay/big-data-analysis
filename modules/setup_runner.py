@@ -4,6 +4,8 @@ from modules.tester import test_data
 from modules.loader import process_multiple_months
 from modules.processor import aggregate_sales, process_data
 from modules.config_loader import config
+from modules.sqlite_manager import save_to_sqlite
+
 
 def get_sales_data_table_name():
     return config.table_names.sales_data
@@ -13,6 +15,12 @@ def get_aggregate_sales_table_name():
 
 def get_data_base_path(month):
     return config.data_paths.october if month == 'Oct' else config.data_paths.november
+
+def get_sales_data_path(month):
+    return config.databases.sales_data.october.db_path if month == 'Oct' else config.databases.sales_data.november.db_path
+
+def get_agg_data_path(month):
+    return config.databases.aggregated_sales.october.db_path if month == 'Oct' else config.databases.aggregated_sales.november.db_path
 
 def get_months():
     return config.months
@@ -40,8 +48,11 @@ def setup_runner():
 
             # Process data
             status_message.markdown(f"Processing data for {month}...")
-            process_data(db_path, config.table_names.raw_data, get_sales_data_table_name())
-            aggregate_sales(db_path, config.table_names.raw_data, get_aggregate_sales_table_name())
+            sales_data_df = process_data(db_path, config.table_names.raw_data, get_sales_data_table_name())
+            agg_data_df = aggregate_sales(db_path, config.table_names.raw_data, get_aggregate_sales_table_name())
+
+            save_to_sqlite(sales_data_df,f"{get_sales_data_path(month)}", get_sales_data_table_name())
+            save_to_sqlite(agg_data_df,f"{get_agg_data_path(month)}", get_aggregate_sales_table_name())
             current_step += 1
             progress.progress(current_step / total_steps)
 
