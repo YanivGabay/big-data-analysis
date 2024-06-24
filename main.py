@@ -5,24 +5,24 @@ import streamlit as st
 from modules.setup_runner import setup_runner
 
 st.set_page_config(page_title='Data Analysis Dashboard', layout='wide')
+LOAD_FROM_CSV = False  # Set to False to skip loading data from CSV files
+TEST_DUCKDB = False  # Set to True to test DuckDB queries
+
 def main():
   
-   
     try:
-      
-        # Setup sidebar for navigation
+              # Setup sidebar for navigation
         st.sidebar.title('Navigation')
         choice = st.sidebar.selectbox(
             'Choose a page:',
               ['Overview', 'Static Graphs', 'Brand Performance',
                 'User Retention', 'User Activities by Hour','Top Products'])
         
-        
         container = st.container(border=True)
         # Load and process data only once and not reload on navigation change
         if 'data_loaded' not in st.session_state:
             with st.spinner('Setting up data...'):
-                setup_runner()
+                setup_runner(LOAD_FROM_CSV, TEST_DUCKDB)
                 st.session_state['data_loaded'] = True  # Mark as loaded
                 container.success('Data has been loaded and processed successfully.')
 
@@ -40,6 +40,7 @@ def main():
             events_activities_by_hour.show()
         elif choice == 'Top Products':
             top_prods.show()
+  
             
 
   

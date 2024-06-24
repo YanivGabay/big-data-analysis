@@ -1,8 +1,8 @@
 # overview.py
 import streamlit as st
-import pandas as pd
 
-from modules.config_loader import config
+
+
 from modules.aggregate_sales_result import AggregateSalesResult
 def show():
     st.title('Aggregated Sales Data')

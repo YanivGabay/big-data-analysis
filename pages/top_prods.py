@@ -8,6 +8,7 @@ from utils.logger import Logger
 import matplotlib.pyplot as plt
 from modules.sqlite_manager import execute_query_to_df
 import plotly.express as px
+from modules.page_data_manager import PageDataManager
 
 october_db_path = f"{config.databases.top_products.db_path}"
 november_db_path = f"{config.databases.top_products.db_path}"
@@ -19,20 +20,9 @@ top_prods_db_path = f"{config.databases.top_products.db_path}"
 colors = ['sunset', 'magenta', 'blues', 'teal', 'sunsetdark']
 
 def show():
-    setup_top_prods()
+    PageDataManager.setup(top_prods_db_path,setup_data)
     top_prods()
 
-
-def setup_top_prods():
-    """
-    This function is called to set up brand data. It processes data only once per session.
-    """
-    if 'user_retention_data' not in st.session_state:
-        Logger.info("Setting up brand data...")
-       
-        setup_data()  
-        Logger.info("Brand data setup completed.")
-        st.session_state['user_retention_data'] = True  # Mark data as prepared
 
 def setup_data():
         

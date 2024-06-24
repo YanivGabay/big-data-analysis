@@ -1,12 +1,13 @@
 from modules.analyze_data import brand_performance_query
 import streamlit as st
-import sqlite3
+
 from modules.config_loader import config
-import pandas as pd
+
 from modules.sqlite_manager import save_to_sqlite
 from utils.logger import Logger
 import matplotlib.pyplot as plt
 from modules.sqlite_manager import execute_query_to_df
+from modules.page_data_manager import PageDataManager
 TOP = 50
 
 october_db_path = f"{config.databases.brands_performance.october.db_path}"
@@ -15,27 +16,15 @@ october_table_name = f"{config.databases.brands_performance.october.table_name}"
 november_table_name = f"{config.databases.brands_performance.november.table_name}"
 
 def show():
-    setup_brand_data()
+    PageDataManager.setup(october_db_path, setup_data)
     brand_performance()
 
-def setup_brand_data():
-    """
-    This function is called to set up brand data. It processes data only once per session.
-    """
-    if 'brand_data_prep' not in st.session_state:
-        Logger.info("Setting up brand data...")
-   
-        setup_data()  
-        Logger.info("Brand data setup completed.")
-        st.session_state['brand_data_prep'] = True  # Mark data as prepared
 
 def setup_data():
    
-    Logger.info('Executing Brand Performance Query')
+    
     df_nov, df_oct = brand_performance_query()
-    Logger.info('Brand Performance Query Executed')
-    Logger.info('Trying to save data to SQLite')
-
+  
     save_to_sqlite(df_oct, f"{october_db_path}",
                    october_table_name)
     save_to_sqlite(df_nov, f"{november_db_path}", 

@@ -1,5 +1,10 @@
 import duckdb
 
+
+LOAD_FROM_CSV = True  # Set to False to skip loading data from CSV files
+
+
+
 def table_exists(con, table_name):
     """
     Check if a table exists in the DuckDB database.

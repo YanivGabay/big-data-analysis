@@ -8,6 +8,7 @@ from utils.logger import Logger
 import matplotlib.pyplot as plt
 from modules.sqlite_manager import execute_query_to_df
 import numpy as np
+from modules.page_data_manager import PageDataManager
 
 october_db_path = f"{config.databases.user_retention.october.db_path}"
 november_db_path = f"{config.databases.user_retention.november.db_path}"
@@ -18,15 +19,10 @@ november_table_name = f"{config.databases.user_retention.november.table_name}"
 
 
 def show():
-    setup_user_ret()
+ 
+    PageDataManager.setup(october_db_path, setup_data)
     user_retention()
 
-def setup_user_ret():
-    """Set up user retention data, ensuring it is only processed once per session."""
-    if 'user_retention_data' not in st.session_state:
-        Logger.info("Setting up user retention data...")
-        setup_data()
-        st.session_state['user_retention_data'] = True
 
 def setup_data():
     """Execute queries to fetch and save user retention data."""

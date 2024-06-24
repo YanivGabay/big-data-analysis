@@ -17,9 +17,18 @@ class PageDataManager:
         return False
     
     
-    def get_state(page_name):
-        if f'{page_name}_data' not in st.session_state:
-            Logger.info(f"Setting up {page_name} data...")
+    def get_state(state_name):
+        if f'{state_name}_data' not in st.session_state:
+            Logger.info(f"Setting up {state_name} data...")
             return False
         return True
     
+    def setup(db_path_as_state,setup_data_func):
+        if PageDataManager.get_state(db_path_as_state):
+            return
+        if PageDataManager.check_db_exists(db_path_as_state):
+            return
+        
+        setup_data_func()
+        st.session_state[f'{db_path_as_state}_data'] = True
+        Logger.info(f"{db_path_as_state} data setup completed.")

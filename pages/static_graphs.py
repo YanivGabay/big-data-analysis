@@ -7,6 +7,29 @@ from modules.sqlite_manager import execute_query_to_df
 from modules.config_loader import config
 from modules.aggregate_sales_result import AggregateSalesResult
 from utils.logger import Logger
+from modules.sqlite_manager import save_to_sqlite
+from modules.processor import process_data, aggregate_sales
+from modules.page_data_manager import PageDataManager
+from modules.config_loader import config
+
+def show():
+    header()
+    PageDataManager.setup(config.databases.sales_data.november.db_path,setup_data)
+    static_graphs()
+
+
+
+def setup_data():
+    for month in config.months:
+        run_and_save(config.get_data_base_path(),month)
+    
+
+def run_and_save(db_path,month):
+    sales_data_df = process_data(db_path, config.table_names.raw_data, config.get_sales_data_table_name())
+    agg_data_df = aggregate_sales(db_path, config.table_names.raw_data, config.get_aggregate_sales_table_name())
+
+    save_to_sqlite(sales_data_df,f"{config.get_sales_data_path(month)}", config.get_sales_data_table_name())
+    save_to_sqlite(agg_data_df,f"{config.get_agg_data_path(month)}", config.get_aggregate_sales_table_name())
 
 def load_user_data():
     table_name = config.table_names.sales_data
@@ -15,30 +38,14 @@ def load_user_data():
     df_nov = execute_query_to_df(config.databases.sales_data.november.db_path, query)
     return df_oct, df_nov
 
-def header():
-    st.title('User Activity Analysis')
-    st.header("Overview of User Activities")
-    st.write("""
-    This dashboard provides a detailed analysis of user activities across different months, specifically focusing on the data extracted from the `sales_data` database. 
-    Each section of this analysis aims to offer insights into various aspects of user behavior, including the number of events, purchase patterns, and price dynamics.
-    
-    ### What You Will Find on This Page:
-    - **Aggregate Sales Overview**: Summarizes sales activities and aggregates them for different periods, giving a snapshot of overall performance and trends.
-    - **Monthly Breakdown**: Detailed analysis for each month with visualizations showing key metrics like average prices, purchase quantities, and event counts.
-    - **Interactive Visuals**: Interactive plots such as violin plots and aggregated bar charts that allow for a deeper dive into the distribution and density of user activities.
-    - **Customizable Data Displays**: Options to filter and customize the data views to focus on specific months or metrics, enhancing the interactive experience.
-
-    By exploring this page, you will gain insights into how user activities vary over time and identify potential areas for marketing focus or operational improvements.
-    """)
-
-def show():
-    header()
+def static_graphs():
+  
     df_oct, df_nov = load_user_data()
-    
+
     with st.expander("October Data Analysis"):
         aggregate_sales_oct = AggregateSalesResult(
         db_path=config.databases.aggregated_sales.october.db_path,
-    
+
         aggregate_sales_table_name=config.table_names.aggregated_sales,
         month = 'October'
         )
@@ -78,6 +85,26 @@ def show():
         plot_aggregated_bar(df_nov['total_events'], "Total Events in November")
         st.markdown("""---""")
       
+
+
+
+
+def header():
+    st.title('User Activity Analysis')
+    st.header("Overview of User Activities")
+    st.write("""
+    This dashboard provides a detailed analysis of user activities across different months, specifically focusing on the data extracted from the `sales_data` database. 
+    Each section of this analysis aims to offer insights into various aspects of user behavior, including the number of events, purchase patterns, and price dynamics.
+    
+    ### What You Will Find on This Page:
+    - **Aggregate Sales Overview**: Summarizes sales activities and aggregates them for different periods, giving a snapshot of overall performance and trends.
+    - **Monthly Breakdown**: Detailed analysis for each month with visualizations showing key metrics like average prices, purchase quantities, and event counts.
+    - **Interactive Visuals**: Interactive plots such as violin plots and aggregated bar charts that allow for a deeper dive into the distribution and density of user activities.
+    - **Customizable Data Displays**: Options to filter and customize the data views to focus on specific months or metrics, enhancing the interactive experience.
+
+    By exploring this page, you will gain insights into how user activities vary over time and identify potential areas for marketing focus or operational improvements.
+    """)
+
 
 def plot_violin(data, title):
    

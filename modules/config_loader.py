@@ -64,6 +64,23 @@ class Config:
     databases: Databases
     months: list
 
+    def get_sales_data_table_name():
+        return config.table_names.sales_data
+
+    def get_aggregate_sales_table_name():
+        return config.table_names.aggregated_sales
+
+    def get_data_base_path(month):
+        return config.data_paths.october if month == 'Oct' else config.data_paths.november
+
+    def get_sales_data_path(month):
+        return config.databases.sales_data.october.db_path if month == 'Oct' else config.databases.sales_data.november.db_path
+
+    def get_agg_data_path(month):
+        return config.databases.aggregated_sales.october.db_path if month == 'Oct' else config.databases.aggregated_sales.november.db_path
+
+    def get_months(self):
+        return self.months
 
 
 

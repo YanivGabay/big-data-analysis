@@ -21,23 +21,15 @@ shared_user_activity_by_hour_table_name = f"{config.databases.shared_user_activi
 
 
 def show():
-    setup()
+    PageDataManager.setup(shared_user_activity_by_hour_db_path,setup_data)
     activities_by_hour()
 
-def setup():
-    if PageDataManager.get_state(shared_user_activity_by_hour_db_path):
-        return
-    if PageDataManager.check_db_exists(shared_user_activity_by_hour_db_path):
-        return
-    
-    setup_data()
-  
 def setup_data():
         
     df_both = activities_by_hour_query()
     
     save_to_sqlite(df_both, f"{shared_user_activity_by_hour_db_path}", shared_user_activity_by_hour_table_name)
-
+    
 
 def activities_by_hour():
     st.title('User Activities by Hour')
@@ -114,7 +106,7 @@ def plot_activities_by_hour(df):
     heatmap_data_nov_normalized = heatmap_data_nov.div(heatmap_data_nov.max(axis=1), axis=0)
 
     # Create the heatmaps
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(24, 8))  # Creating a subplot with two columns
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(26, 16))  # Creating a subplot with two columns
 
     # Heatmap for October
     sns.heatmap(heatmap_data_oct_normalized, annot=True, fmt=".2f", cmap='coolwarm', linewidths=.5, ax=ax1)
