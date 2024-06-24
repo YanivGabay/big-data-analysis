@@ -83,7 +83,7 @@ def top_prod_compare_query():
         total_sales
         FROM CombinedSales
         ORDER BY total_sales DESC
-        LIMIT 100;
+        
 
     """
     df_both = execute_cross_db_query(config.data_paths.october, config.data_paths.november, query, params={'table_name_oct': config.table_names.raw_data, 'table_name_nov': config.table_names.raw_data})

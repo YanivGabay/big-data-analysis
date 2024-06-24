@@ -43,7 +43,7 @@ class Databases:
     brands_performance: BrandPerformance
     user_retention: UserRetention
     shared_user_activity_by_hour: SharedUserActivityByHour
-    top_prods: TopProds
+    top_products: TopProds
 
 @dataclass
 class Config:
@@ -71,7 +71,7 @@ def load_config(config_path: str = 'config.json') -> Config:
                 november=DatabaseDetails(**config_dict['databases']['user_retention']['november'])
             ),
             shared_user_activity_by_hour=SharedUserActivityByHour(**config_dict['databases']['shared_user_activity_by_hour']),
-            top_prods=TopProds(**config_dict['databases']['top_prods'])
+            top_products=TopProds(**config_dict['databases']['top_products'])
         ),
         months=config_dict['months']
     )

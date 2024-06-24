@@ -13,6 +13,13 @@ from utils.logger import Logger
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+
+
+shared_user_activity_by_hour_db_path = f"{config.databases.shared_user_activity_by_hour.db_path}"
+shared_user_activity_by_hour_table_name = f"{config.databases.shared_user_activity_by_hour.table_name}"
+
+
+
 def show():
     setup_user_ret()
     activities_by_hour()
@@ -35,7 +42,7 @@ def setup_data():
     df_both = activities_by_hour_query()
     Logger.info('Trying to save data to SQLite')
 
-    save_to_sqlite(df_both, f"{config.databases.shared_user_activity_by_hour.db_path}", config.databases.shared_user_activity_by_hour.table_name)
+    save_to_sqlite(df_both, f"{shared_user_activity_by_hour_db_path}", shared_user_activity_by_hour_table_name)
 
 def activities_by_hour():
     st.title('User Activities by Hour')
@@ -124,10 +131,10 @@ def plot_activities_by_hour(df):
 
 def get_activities_by_hour():
     query = f"""
-    SELECT * FROM {config.databases.shared_user_activity_by_hour.table_name}
+    SELECT * FROM {shared_user_activity_by_hour_table_name}
     ORDER BY hour, event_type;
     """
-    df = execute_query_to_df(config.databases.shared_user_activity_by_hour.db_path,query)
+    df = execute_query_to_df(shared_user_activity_by_hour_db_path,query)
     Logger.info(f"Dataframe shape: {df.shape[0]} rows, {df.shape[1]} columns")
     Logger.info('Df headers:')
     Logger.info(df.head())
