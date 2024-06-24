@@ -90,7 +90,7 @@ def style_dataframe(df):
         ).apply(
             lambda x: ['background-color: cyan' if v > median_average_price else 'background-color: transparent' for v in x],
             subset=['average_price']
-        ).set_caption("Red: Total Sales above median; Blue: Average Price above median")
+        ).set_caption("Red: Total Sales above median ||| Blue: Average Price above median")
 
         return styled_df
 
