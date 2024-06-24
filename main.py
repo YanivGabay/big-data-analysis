@@ -1,5 +1,5 @@
 
-from pages import overview, interactive, static_graphs , brand_performance , user_retention, events_activities_by_hour
+from pages import overview, interactive, static_graphs , brand_performance , user_retention, events_activities_by_hour, top_prods
 import streamlit as st
 
 from modules.setup_runner import setup_runner
@@ -34,6 +34,8 @@ def main():
             user_retention.show()
         elif choice == 'User Activities by Hour':
             events_activities_by_hour.show()
+        elif choice == 'Top Products':
+            top_prods.show()
             
 
   

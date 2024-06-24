@@ -43,6 +43,51 @@ def execute_cross_db_query(db_path1, db_path2, query,params=None):
     finally:
         con.close()
 
+def top_prod_compare_query():
+    query = """
+        WITH OctoberSales AS (
+        SELECT 
+            product_id,
+            COUNT(*) AS sales_count_oct,
+            SUM(price) AS total_sales_oct
+        FROM {table_name}
+        WHERE event_type = 'purchase'
+        GROUP BY product_id
+        ),
+        NovemberSales AS (
+        SELECT 
+            product_id,
+            COUNT(*) AS sales_count_nov,
+            SUM(price) AS total_sales_nov
+        FROM db2.{table_name}
+        WHERE event_type = 'purchase'
+        GROUP BY product_id
+        ),
+        CombinedSales AS (
+        SELECT
+            o.product_id,
+            COALESCE(o.sales_count_oct, 0) AS sales_count_oct,
+            COALESCE(o.total_sales_oct, 0) AS total_sales_oct,
+            COALESCE(n.sales_count_nov, 0) AS sales_count_nov,
+            COALESCE(n.total_sales_nov, 0) AS total_sales_nov,
+            (COALESCE(o.total_sales_oct, 0) + COALESCE(n.total_sales_nov, 0)) AS total_sales
+        FROM OctoberSales o
+        FULL OUTER JOIN NovemberSales n ON o.product_id = n.product_id
+        )
+        SELECT 
+        product_id,
+        sales_count_oct,
+        total_sales_oct,
+        sales_count_nov,
+        total_sales_nov,
+        total_sales
+        FROM CombinedSales
+        ORDER BY total_sales DESC
+        LIMIT 100;
+
+    """
+    df_both = execute_cross_db_query(config.data_paths.october, config.data_paths.november, query, params={'table_name_oct': config.table_names.raw_data, 'table_name_nov': config.table_names.raw_data})
+    return df_both
 
 def activities_by_hour_query():
     query = """

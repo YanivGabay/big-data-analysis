@@ -1,45 +1,6 @@
 from dataclasses import dataclass
 import json
 from dataclasses import dataclass
-{
-    "data_paths": {
-        "october": "db/2019-oct.duckdb",
-        "november": "db/2019-nov.duckdb"
-    },
-    "table_names": {
-        "raw_data": "raw_data",
-        "sales_data": "sales_data",
-        "aggregated_sales": "aggregated_sales"
-    },
-    "databases": {
-        "brands_performance": {
-            "october": {
-                "db_path": "db/brands/2019-oct.db",
-                "table_name": "brands_performance_oct"
-            },
-            "november": {
-                "db_path": "db/brands/2019-nov.db",
-                "table_name": "brands_performance_nov"
-            }
-        },
-        "user_retention": {
-            "october": {
-                "db_path": "db/user_retention/2019-oct.db",
-                "table_name": "user_retention_oct"
-            },
-            "november": {
-                "db_path": "db/user_retention/2019-nov.db",
-                "table_name": "user_retention_nov"
-            }
-        },
-        "shared_user_activity_by_hour": {
-            "db_path": "db/shared_user_activity_by_hour/2019-shared.db",
-            "table_name": "shared_user_activity_by_hour_nov"
-           
-        }
-    },
-    "months": ["Oct", "Nov"]
-}
 
 @dataclass
 class DatabasePaths:
@@ -63,6 +24,11 @@ class BrandPerformance:
     november: DatabaseDetails
 
 @dataclass
+class TopProds:
+    db_path: str
+    table_name: str
+
+@dataclass
 class UserRetention:
     october: DatabaseDetails
     november: DatabaseDetails
@@ -77,6 +43,7 @@ class Databases:
     brands_performance: BrandPerformance
     user_retention: UserRetention
     shared_user_activity_by_hour: SharedUserActivityByHour
+    top_prods: TopProds
 
 @dataclass
 class Config:
@@ -103,7 +70,8 @@ def load_config(config_path: str = 'config.json') -> Config:
                 october=DatabaseDetails(**config_dict['databases']['user_retention']['october']),
                 november=DatabaseDetails(**config_dict['databases']['user_retention']['november'])
             ),
-            shared_user_activity_by_hour=SharedUserActivityByHour(**config_dict['databases']['shared_user_activity_by_hour'])
+            shared_user_activity_by_hour=SharedUserActivityByHour(**config_dict['databases']['shared_user_activity_by_hour']),
+            top_prods=TopProds(**config_dict['databases']['top_prods'])
         ),
         months=config_dict['months']
     )

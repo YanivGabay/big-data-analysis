@@ -33,6 +33,10 @@
             "db_path": "db/shared_user_activity_by_hour/2019-shared.db",
             "table_name": "shared_user_activity_by_hour"
            
+        },
+        "top_products" : {
+            "db_path": "db/top_products/2019-top-products.db",
+            "table_name": "top_products"
         }
     },
     "months": ["Oct", "Nov"]

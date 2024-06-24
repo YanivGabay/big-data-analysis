@@ -5,8 +5,8 @@
 - [X] Create a `modules` directory with the following modules:
   - [X] `loader.py`: responsible for loading the data.
   - [X] `processor.py`: responsible for processing the data.
-  - [ ] `analyzer.py`: responsible for analyzing the data.
-  - [ ] `visualizer.py`: responsible for visualizing the data.
-  - [ ] Each module should have a function that receives the data and returns the processed data. (maybe a different approach is better)
+  - [X] `analyzer.py`: responsible for analyzing the data.
+
+
   
 
