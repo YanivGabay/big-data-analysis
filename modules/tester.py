@@ -1,11 +1,12 @@
 
 import duckdb
+import streamlit as st
 
 
-
-def test_data(db_path, table_name):
+def test_data(db_path, table_name,month):
     try:
         con = duckdb.connect(db_path)
+        st.write(f"#### Tested data for month: {month} table name: {table_name}")
         count_rows(con, table_name)
         
         print_some_data(con, table_name)
@@ -23,17 +24,20 @@ def test_data(db_path, table_name):
 
 def print_some_data(con, table_name):
     print_to(f"Printing some data from {table_name}...")
-   
+    st.write(f"**Printing some data from {table_name}:**")
     query = f"SELECT * FROM {table_name} LIMIT 10"
     result = con.execute(query).fetchdf()
+    st.dataframe(result)
     print(result)
     
 
 
 def describe_table(con,table_name):
     print_to(f"Describing table {table_name}...")
+    st.write(f"**Describing table {table_name}:**")
     result = con.execute(f"DESCRIBE {table_name}").fetchdf()
     print(result)
+    st.dataframe(result)
 
 
 
@@ -48,17 +52,22 @@ def check_categorical_data(con,table_name):
 
     event_types = con.execute(f"SELECT DISTINCT event_type FROM {table_name} WHERE event_type IS NOT NULL").fetchall()
     print("Event Types:", event_types)
+    st.write("**Event Types:**", event_types)
     # Similar checks can be done for 'category_code' and 'brand'
 
 def count_rows(con,table_name):
     print_to(f"Counting rows in {table_name}...")
+    
     result = con.execute(f"SELECT COUNT(*) FROM {table_name}").fetchall()
     print("Number of rows:", result[0][0])
+    st.write("**Number of rows:**", result[0][0])
 
 def count_unique_products(con,table_name):
     print_to(f"Counting unique products in {table_name}...")
+    st.write(f"Counting unique products in {table_name}:")
     result = con.execute(f"SELECT COUNT(DISTINCT product_id) FROM {table_name}").fetchall()
     print("Number of unique products:", result[0][0])
+    st.write("**Number of unique products:**", result[0][0])
 
 
 
@@ -76,6 +85,7 @@ def count_missing_values(con, table_name):
     missing_counts = {}
     try:
         print_to(f"Counting missing values in {table_name}...")
+        st.write(f"**Counting missing values in {table_name}...**")
         # Retrieve the list of columns from the table
         columns = con.execute(f"PRAGMA table_info({table_name});").fetchall()
         column_names = [column[1] for column in columns]  # column[1] is the name of the column
@@ -86,8 +96,9 @@ def count_missing_values(con, table_name):
             missing_counts[column_name] = result[0][0]  # result[0][0] is the count of NULL values
 
         print("Missing values per column:")
-        for col, count in missing_counts.items():
-            print(f"{col}: {count}")
+        st.write(missing_counts)
+       
+        
 
     except Exception as e:
         print(f"Error counting missing values in {table_name}: {e}")

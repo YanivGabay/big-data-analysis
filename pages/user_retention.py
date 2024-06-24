@@ -6,7 +6,7 @@ import pandas as pd
 from modules.sqlite_manager import save_to_sqlite
 from utils.logger import Logger
 import matplotlib.pyplot as plt
-
+from modules.sqlite_manager import execute_query_to_df
 import numpy as np
 
 def show():
@@ -53,6 +53,12 @@ def user_retention():
     3. **Save And Load Data**: Saves the aggregated data to SQLite databases for October and November, then loads the data for comparison.
     4. **Compare Data**: Compares the user retention metrics between October and November, displaying the results in a bar chart.
    
+             
+             ### User Retention Metrics
+    - **Average Retention Days**: The average number of days that users remain active.
+    - **Total Users**: The total number of users who have been active.
+    - **Average Purchase Frequency**: The average number of purchases made by users.
+             
     """)
     Logger.info('Loading October and November User Retention Data')
     df_oct = load_monthly_user_retention(f"{config.queries_dbs.user_retention.october}", config.queries_dbs.user_retention.table_names.user_retention_oct)
@@ -67,8 +73,8 @@ def user_retention():
 def plot_user_retention_separate(df_oct, df_nov):
     metrics = ['avg_retention_days', 'total_users', 'avg_purchase_frequency']
     titles = ['Average Retention Days', 'Total Users', 'Average Purchase Frequency']
-    colors_oct = ['skyblue', 'lightgreen', 'salmon']
-    colors_nov = ['blue', 'green', 'red']
+    colors_oct = ['skyblue', '#C738BD', 'salmon']
+    colors_nov = ['#D8EFD3', '#95D2B3', '#F1F8E8']
 
     fig, axes = plt.subplots(1, 3, figsize=(15, 5))
     
@@ -111,10 +117,15 @@ def plot_user_retention(df_oct, df_nov):
    
 def load_monthly_user_retention(db_path, table_name):
     try:
-        conn = sqlite3.connect(db_path)
+
+
+  
         query = f"SELECT * FROM {table_name}"
-        df = pd.read_sql(query, conn)
-        conn.close()
+        df = execute_query_to_df(db_path, query)
+    
+
+
+        
         return df
     except Exception as e:
         Logger.error(f"Error loading data from SQLite database: {str(e)}")

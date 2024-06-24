@@ -41,6 +41,8 @@ def execute_cross_db_query(db_path1, db_path2, query,params=None):
         con.close()
 
 
+    
+
 
 def brand_performance_query():
     query = """
@@ -82,7 +84,7 @@ def user_retention_query():
     Retention_Analysis AS (
         SELECT
             user_id,
-            DATEDIFF('days', first_activity, last_activity) AS retention_days,  -- Specify 'days' as the unit
+            DATEDIFF('days', first_activity, last_activity) AS retention_days, 
             purchase_count
         FROM First_Last_Activities
     )

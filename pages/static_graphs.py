@@ -1,4 +1,4 @@
-from modules.create_visualization import show_aggregated_data
+
 from modules.analyze_data import brand_performance_query
 import streamlit as st
 from modules.setup_runner import get_months

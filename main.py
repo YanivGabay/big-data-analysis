@@ -13,13 +13,13 @@ def main():
         # Setup sidebar for navigation
         st.sidebar.title('Navigation')
         choice = st.sidebar.selectbox('Choose a page:', ['Overview', 'Interactive Graphs', 'Static Graphs', 'Brand Performance', 'User Retention'])
-
+        container = st.container(border=True)
         # Load and process data only once and not reload on navigation change
         if 'data_loaded' not in st.session_state:
             with st.spinner('Setting up data...'):
                 setup_runner()
                 st.session_state['data_loaded'] = True  # Mark as loaded
-                st.success('Data has been loaded and processed successfully.')
+                container.success('Data has been loaded and processed successfully.')
 
         # Show aggregated data on a dedicated page or under a condition
         if choice == 'Overview':

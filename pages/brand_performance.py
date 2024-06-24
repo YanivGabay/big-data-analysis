@@ -6,8 +6,7 @@ import pandas as pd
 from modules.sqlite_manager import save_to_sqlite
 from utils.logger import Logger
 import matplotlib.pyplot as plt
-
-
+from modules.sqlite_manager import execute_query_to_df
 TOP = 50
 
 def show():
@@ -116,22 +115,22 @@ def display_dataframe_with_legend(df):
 def load_top_brands(sqlite_db_path, table_name, top=TOP):
     Logger.info(f"Loading top {top} brands from {sqlite_db_path}...")
     Logger.info(f"Table name: {table_name}")
-    with sqlite3.connect(sqlite_db_path) as conn:
-        query = f"""
-        SELECT
-            ROW_NUMBER() OVER (ORDER BY total_sales DESC) AS Rank,
-            brand,
-            total_sales,
-            total_purchases,
-            average_price
-        FROM
-            {table_name}
-        ORDER BY
-            total_sales DESC
-        LIMIT
-            {top};
-        """
-        df = pd.read_sql(query, conn)
+
+    query = f"""
+                SELECT
+                    ROW_NUMBER() OVER (ORDER BY total_sales DESC) AS Rank,
+                    brand,
+                    total_sales,
+                    total_purchases,
+                    average_price
+                FROM
+                    {table_name}
+                ORDER BY
+                    total_sales DESC
+                LIMIT
+                    {top};
+                """
+    df = execute_query_to_df(sqlite_db_path, query)
     Logger.info(f"Successfully queried from {sqlite_db_path} the top {top} brands.")
     return df
 
