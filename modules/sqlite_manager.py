@@ -14,7 +14,7 @@ def save_to_sqlite(df, db_path, table_name):
        
         Logger.info(f"Data saved to SQLite database at {db_path}")
     except ValueError as e:
-        Logger.error(f"Error saving data to SQLite database: {str(e)}")
+        Logger.info(f"value error, data exists, if your not inteding this behaviour, delete the sql db file at {db_path}. e: {str(e)}")
     except Exception as e:
         Logger.error(f"Error saving data to SQLite database: {str(e)}")
  
