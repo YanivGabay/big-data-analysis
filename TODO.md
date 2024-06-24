@@ -7,6 +7,12 @@
   - [X] `processor.py`: responsible for processing the data.
   - [X] `analyzer.py`: responsible for analyzing the data.
 
-
+- [ ]`/pages`: All pages have a ```def show():
+    setup_something()
+    something()``` 
+    to i think it will be good to move this logic to a outside class maybe, to avoid code duplication,
+    aswell allowing to different pages to have different setups using the same method/instance/class/what is needed.
+- [ ] Create some variable to control the logger output, like a debug variable, to avoid print all the time.
+- [ ] Add some easy spinner/loader module to all the pages, not only loader.py.
   
 
