@@ -100,7 +100,7 @@ def plot_top_brands(df, percent_increase,select_color_pallete):
     )
 
     fig.update_layout(
-        coloraxis_colorbar=dict(title='Percent Increase %'),
+        coloraxis_colorbar=dict(title='Percent Increase (by counts) %'),
         xaxis_title='Sales Count in October',
         yaxis_title='Sales Count in November',
         title_font=dict(size=24, family='Arial', color='Black'),
@@ -113,7 +113,7 @@ def plot_top_brands(df, percent_increase,select_color_pallete):
                 text="Bubble size represents total sales; color intensity increase percentage from October to November",
                 xref="paper",
                 yref="paper",
-                showarrow=False,
+               
                 font=dict(size=14)
             )
         ]

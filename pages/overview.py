@@ -10,6 +10,8 @@ def show():
     ## Project Overview
     This dashboard provides a comprehensive analysis of ecommerce behavior through multiple interactive pages. Each page is designed to focus on specific aspects of ecommerce data ranging from individual brand performance to user engagement patterns across different times of the day.
 
+    ## This was made by Yaniv Gabay 
+             
     ## Pages Overview
     - **Brand Performance**: Analyzes sales performance across various brands, comparing metrics like total sales and average prices between October and November.
     - **User Activities by Hour**: Offers insights into user activities segmented by hour, which helps in understanding user engagement patterns throughout the day. interactive heatmap and bar chart for different event types.

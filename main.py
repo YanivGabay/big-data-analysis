@@ -13,7 +13,7 @@ st.set_page_config(page_title='Data Analysis Dashboard', layout='wide')
 
 LOAD_FROM_CSV = False  # Set to False to skip loading data from CSV files
 TEST_DUCKDB = False  # Set to True to test DuckDB queries
-
+Logger.set_console_output(False)
 def main():
     """
     This function serves as the entry point for the application.
@@ -24,7 +24,7 @@ def main():
     #### i reccomend to use True to see command line outputs
     #### your choice
 
-    Logger.set_console_output(False)
+    
     try:
         # Setup sidebar for navigation
         st.sidebar.title('Navigation')

@@ -49,11 +49,31 @@ pip install -r requirements.txt
 
 ## Running the Project
 
-To run the main analysis:
+If you want to download the csv and use this program please update to True in main.py:
+@main.py / line 14
+
+```python
+LOAD_FROM_CSV = False  # Set to False to skip loading data from CSV files
+```
+If you want to show some basic test data on the console please update to True in main.py:
+@main.py / line 15
+
+```python
+TEST_DUCKDB = False  # Set to True to test DuckDB queries
+```
+
+if you want console output please update to True in main.py:
+
+```python
+Logger.set_console_output(False)  # Set to True to enable console output
+```
+
+To run the the program:
 
 ```bash
 streamlit run main.py
 ```
+
 
 ## Project Structure
 
