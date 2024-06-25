@@ -21,7 +21,9 @@ def show():
 
 - [X] Create some variable to control the logger output, like a debug variable, to avoid print all the time.
 
-- [ ] UML diagram of the project.
+- [X] UML diagram of the project.
 
 - [ ] Add some easy spinner/loader module to all the pages, not only loader.py.
-  
+
+- [ ] Make the top_prods be negative values, or show both? 
+ 

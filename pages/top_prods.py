@@ -61,7 +61,7 @@ def top_prods():
         - **Top Products Slider**: Adjust to increase or decrease the number of top selling products displayed.
         - **Percentage Increase Slider**: Move to set the threshold for highlighting products with significant sales growth.
     """)
-    top_brands = st.slider('Select how many top selling brands to display:', min_value=10, max_value=100, value=25, step=5)
+    top_brands = st.slider('Select how many top selling products to display:', min_value=10, max_value=100, value=25, step=5)
     percent_increase = st.slider('Select the minimum percentage increase to highlight:', min_value=0, max_value=100, value=50, step=5)
     select_color_palette = st.selectbox('Select Color Palette', colors)  
     Logger.info(f"Top products to display: {top_brands}, Minimum percentage increase to highlight: {percent_increase}%,Choosen Color Pallete: {select_color_palette}")
@@ -81,7 +81,7 @@ def plot_top_brands(df, percent_increase,select_color_pallete):
         x='sales_count_oct',
         y='sales_count_nov',
         size='total_sales',  # Bubble size based on total sales
-        color='total_sales',  # Bubble color also based on total sales for additional visual differentiation
+        color='percent_increase',  # Bubble color also based on total sales for additional visual differentiation
         hover_name='product_id',  # Shows product_id on hover for clarity
         color_continuous_scale=select_color_pallete,
         hover_data={
@@ -95,12 +95,12 @@ def plot_top_brands(df, percent_increase,select_color_pallete):
         labels={
             'sales_count_oct': 'Sales Count in October',
             'sales_count_nov': 'Sales Count in November',
-            'total_sales': 'Total Sales ($)'
+            'percent_increase': 'Percent Increase %'
         }
     )
 
     fig.update_layout(
-        coloraxis_colorbar=dict(title='Total Sales ($)'),
+        coloraxis_colorbar=dict(title='Percent Increase %'),
         xaxis_title='Sales Count in October',
         yaxis_title='Sales Count in November',
         title_font=dict(size=24, family='Arial', color='Black'),
@@ -108,12 +108,12 @@ def plot_top_brands(df, percent_increase,select_color_pallete):
         annotations=[
             dict(
                 x=0.5,
-                y=-0.15,
+                y=-1.15,
                 showarrow=False,
-                text="Bubble size represents total sales; color intensity indicates total sales amount.",
+                text="Bubble size represents total sales; color intensity increase percentage from October to November",
                 xref="paper",
                 yref="paper",
-                
+                showarrow=False,
                 font=dict(size=14)
             )
         ]
