@@ -43,6 +43,7 @@ def execute_cross_db_query(db_path1, db_path2, query,params=None):
     finally:
         con.close()
 
+
 def top_prod_compare_query():
     query = """
         WITH OctoberSales AS (
