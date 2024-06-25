@@ -1,10 +1,17 @@
 import datetime
 
 class Logger:
+    console_enabled = True  # Class variable to control output
+
     @staticmethod
     def print(message, level="INFO"):
-        now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        print(f"[{now}] [{level}] - {message}")
+        if Logger.console_enabled:
+            now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            print(f"[{now}] [{level}] - {message}")
+
+    @staticmethod
+    def set_console_output(enable=True):
+        Logger.console_enabled = enable  # Set the class variable based on the input
 
     @staticmethod
     def info(message):
@@ -20,10 +27,13 @@ class Logger:
 
     @staticmethod
     def section_header(title):
-        print("\n" + "-"*50)
-        Logger.info(f"{title}")
-        print("-"*50)
+        if Logger.console_enabled:
+            print("\n" + "-"*50)
+        Logger.info(title)
+        if Logger.console_enabled:
+            print("-"*50)
 
     @staticmethod
     def section_footer():
-        print("-"*50 + "\n")
+        if Logger.console_enabled:
+            print("-"*50 + "\n")

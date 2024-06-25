@@ -25,7 +25,7 @@ The dataset used in this project can be found on Kaggle:
 ## Project Structure
 
 
-```
+```plaintext
 Ecommerce_Big_Data_Analysis/
 ├── .gitignore
 ├── .streamlit/
