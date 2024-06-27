@@ -30,5 +30,6 @@ class PageDataManager:
             return
         
         setup_data_func()
+        
         st.session_state[f'{db_path_as_state}_data'] = True
         Logger.info(f"{db_path_as_state} data setup completed.")

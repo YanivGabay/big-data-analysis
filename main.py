@@ -1,5 +1,5 @@
 
-from pages import overview,  static_graphs , brand_performance , user_retention, events_activities_by_hour, top_prods
+from pages import overview,  static_graphs , brand_performance , user_retention, events_activities_by_hour, top_prods, faker_spark_stats
 import streamlit as st
 
 from modules.setup_runner import setup_runner
@@ -13,7 +13,7 @@ st.set_page_config(page_title='Data Analysis Dashboard', layout='wide')
 
 LOAD_FROM_CSV = False  # Set to False to skip loading data from CSV files
 TEST_DUCKDB = False  # Set to True to test DuckDB queries
-Logger.set_console_output(False)
+Logger.set_console_output(True)
 def main():
     """
     This function serves as the entry point for the application.
@@ -31,7 +31,7 @@ def main():
         choice = st.sidebar.selectbox(
             'Choose a page:',
             ['Overview', 'Static Graphs', 'Brand Performance',
-             'User Retention', 'User Activities by Hour', 'Top Products'])
+             'User Retention', 'User Activities by Hour', 'Top Products','Faker Spark Stats'])
 
         container = st.container(border=True)
         # Load and process data only once and not reload on navigation change
@@ -55,6 +55,8 @@ def main():
             events_activities_by_hour.show()
         elif choice == 'Top Products':
             top_prods.show()
+        elif choice == 'Faker Spark Stats':
+            faker_spark_stats.show()
 
     except Exception as e:
         print(f"An error occurred: {e}")

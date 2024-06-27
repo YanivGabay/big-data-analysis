@@ -1,30 +1,41 @@
 
+# Graph Database Schema instead of Relational Database Schema
 
-```mermaid
-graph TD;
+## Visual Representation of Graph Database Schema
 
-    User[("User")]
-    Session[("Session")]
-    Event[("Event")]
-    Product[("Product")]
-    Many[("Many Products")]
-    Category[("Category")]
-    Brand[("Brand")]
+![CALL db.schema.visualization()](image.png)
 
-    User -->|initiates| Session
-    Session -->|generates| Event
-    Event -->|involves| Product
-    
-    Product -->|belongs to| Category
-    Product -->|branded as| Brand
-    User -->|performs| Event
+### Example of Two Users' Events
 
-    classDef oneToMany fill:#f9f,stroke:#333,stroke-width:2px;
-    classDef manyToOne fill:#ccf,stroke:#333,stroke-width:2px;
-    class User,Session,Category,Brand oneToMany;
-    class Event,Product manyToOne;
+![Example of two users events](image-1.png)
 
-```
+## Node Properties
+
+### User Nodes
+
+- `user_id`: Integer (Unique identifier for each user)
+
+### Product Nodes
+
+- `product_id`: Integer (Unique identifier for each product)
+- `price`: Integer (Price of the product)
+
+### Event Nodes
+
+- `event_type`: String (Type of event, e.g., 'view', 'purchase')
+- `event_time`: Timestamp (Time when the event occurred)
+
+### Category Nodes
+
+- `category_code`: String (Category of the product, e.g., 'electronics', 'clothing')
+
+### Brand Nodes
+
+- `brand`: String (Brand of the product, e.g., 'BrandA', 'BrandB')
+
+### Session Nodes
+
+- `user_session`: String (Unique session identifier)
 
 ## Graph Database Schema Explanation
 
@@ -36,10 +47,3 @@ graph TD;
 - **Product Node**: Each product involved in an event has a brand and belongs to a category.
 - **Category Node**: Represents the category of products, helping in the classification and organization of products.
 - **Brand Node**: Represents the brand associated with a product.
-
-### Schema Design Considerations
-
-- **One-to-Many Relationships**: Indicated by the relationships where one user can initiate multiple sessions, one session can generate multiple events, and one product can be involved in multiple events.
-- **Many-to-One Relationships**: Products relate back to their categories and brands. A single category can encompass numerous products, and a single brand can be associated with many products.
-
-
