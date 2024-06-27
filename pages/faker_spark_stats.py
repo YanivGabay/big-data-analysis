@@ -11,6 +11,7 @@ db_full_path = f"db/spark/{db_path}"
 max_rows = 50
 table_name = 'sales_summary'
 
+plt.style.use('ggplot')
 def show():
     PageDataManager.setup(db_full_path, setup_data)
     
@@ -30,7 +31,7 @@ def show():
 - `user_session`: Session ID of the user interaction.
              
 Spark "fake" data schema:
-             
+```python             
 schema = T.StructType([
     T.StructField("user_id", T.IntegerType(), True),
     T.StructField("product_id", T.IntegerType(), True),
@@ -41,6 +42,7 @@ schema = T.StructType([
     T.StructField("brand", T.StringType(), True),
     T.StructField("user_session", T.StringType(), True)
 ])
+```
 The only difference is we had two dataset per month, October and November, while
              In our fake data we generate:  fake.date_time_this_year(),  # event_time
              so basicly till today.
@@ -85,10 +87,15 @@ ORDER BY month, category_code;
 """
     df = execute_query_to_df(db_full_path, query)
     st.write('### Cumulative Sales by Category (Monthly)')
-    plot_cumulative_sales_by_categ(df)
-   
+    st.write("""
+    This chart shows the cumulative sales by category on a monthly basis. It helps to understand the overall growth
+    of sales over time for each category. The x-axis represents the months, and the y-axis represents the cumulative sales.
+    """)
 
-   
+    selected_categories = st.multiselect('Select categories to display (Cumulative Sales)', df['category_code'].unique(), default=df['category_code'].unique(), key='cumulative_sales_multiselect')
+    plot_cumulative_sales_by_categ(df[df['category_code'].isin(selected_categories)])
+
+
 def plot_cumulative_sales_by_categ(df):
     plt.figure(figsize=(10, 5))
     for category, group in df.groupby('category_code'):
@@ -104,7 +111,10 @@ def plot_cumulative_sales_by_categ(df):
     
 def area_chart(df):
     st.write('### Area Chart')
-
+    st.write("""
+    This chart shows the monthly sales by category using a stacked area chart. It allows you to see the contribution
+    of each category to the total sales over time. The x-axis represents the months, and the y-axis represents the sales.
+    """)
     query = f"""
     SELECT
     category_code,
@@ -115,7 +125,10 @@ GROUP BY category_code, month
 ORDER BY month, category_code;
 """
     df = execute_query_to_df(db_full_path, query)
-    plot_area_chart(df)
+    selected_categories = st.multiselect('Select categories to display (Area Chart)', df['category_code'].unique(), default=df['category_code'].unique(), key='area_chart_multiselect')
+    plot_area_chart(df[df['category_code'].isin(selected_categories)])
+
+
 
 def plot_area_chart(df):
    
