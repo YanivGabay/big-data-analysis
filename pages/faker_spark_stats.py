@@ -69,7 +69,7 @@ def setup_data():
 def non_query_graphs(df):
     cumulative_sales_by_categ(df)
     area_chart(df)
-    
+    avg_daily_sales_per_category(df)
 
 def cumulative_sales_by_categ(df):
     query = f"""
@@ -117,12 +117,12 @@ def area_chart(df):
     """)
     query = f"""
     SELECT
-    category_code,
-    strftime('%Y-%m', event_date) AS month,
-    SUM(daily_sales) AS monthly_sales
-FROM {table_name}
-GROUP BY category_code, month
-ORDER BY month, category_code;
+        category_code,
+        strftime('%Y-%m', event_date) AS month,
+        SUM(daily_sales) AS monthly_sales
+    FROM {table_name}
+    GROUP BY category_code, month
+    ORDER BY month, category_code;
 """
     df = execute_query_to_df(db_full_path, query)
     selected_categories = st.multiselect('Select categories to display (Area Chart)', df['category_code'].unique(), default=df['category_code'].unique(), key='area_chart_multiselect')
@@ -139,6 +139,42 @@ def plot_area_chart(df):
     plt.ylabel('Monthly Sales')
     plt.xticks(rotation=45)
     plt.legend(title='Category')
+    st.pyplot(plt.gcf())  # Use plt.gcf() to get the current figure in Streamlit
+    plt.close()
+
+
+
+def avg_daily_sales_per_category(df):
+    query = f"""
+    SELECT
+        category_code,
+        strftime('%Y-%m', event_date) AS month,
+        AVG(daily_sales) AS avg_daily_sales
+    FROM {table_name}
+    GROUP BY category_code, month
+    ORDER BY month, category_code;
+    """
+    df = execute_query_to_df(db_full_path, query)
+    st.write('### Average Daily Sales by Category (Monthly)')
+    st.write("""
+    This chart shows the average daily sales by category on a monthly basis. It helps to understand the sales trends
+    over time for each category. The x-axis represents the months, and the y-axis represents the average daily sales.
+    """)
+
+    selected_categories = st.multiselect('Select categories to display (Average Daily Sales)', df['category_code'].unique(), default=df['category_code'].unique(), key='avg_daily_sales_multiselect')
+    plot_avg_daily_sales_per_category(df[df['category_code'].isin(selected_categories)])
+
+
+def plot_avg_daily_sales_per_category(df):
+    plt.figure(figsize=(10, 5))
+    for category, group in df.groupby('category_code'):
+        sns.lineplot(data=group, x='month', y='avg_daily_sales', label=f'Category {category}')
+    plt.title('Average Daily Sales by Category (Monthly)')
+    plt.xlabel('Month')
+    plt.ylabel('Average Daily Sales')
+    plt.xticks(rotation=45)
+    plt.legend()
+    plt.grid(True)
     st.pyplot(plt.gcf())  # Use plt.gcf() to get the current figure in Streamlit
     plt.close()
 
