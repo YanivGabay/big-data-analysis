@@ -5,7 +5,7 @@ __pycache__/
 
 # Datastore files
 *.sqlite3
-*.db
+
 *.duckdb
 *.csv
 
