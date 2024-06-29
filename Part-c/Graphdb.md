@@ -9,6 +9,8 @@
 
 ![Example of two users events](image-1.png)
 
+important to say, the graph is not complete, it is just a example of how it could be, a user can have multiple sessions, and a session can have multiple events, and a event can have multiple products, and a product can have multiple categories and brands.
+
 ## Node Properties
 
 ### User Nodes

@@ -74,53 +74,89 @@ To run the the program:
 streamlit run main.py
 ```
 
-
 ## Project Structure
 
+- `.gitignore` (standard Python `.gitignore` file)
+- `config.json` (configuration file for database paths and table names)
+- `main.py` (main script to run the Streamlit app)
+- `README.md` (this file)
+- `requirements.txt` (list of Python dependencies)
+- `TODO.md` (task list for the project)
+- `.streamlit/`
+- `e_commerce_uml.drawio` (UML diagram of the project)
+  - `config.toml` (Streamlit configuration file)
+- `data/` (directory containing the dataset CSV files)
+  - `2019-Nov.csv`
+  - `2019-Oct.csv`
+- `db/` (directory containing the SQLite databases + DuckDB files)
+  - `2019-nov.duckdb`
+  - `2019-oct.duckdb`
+  - `aggregated_sales/`
+    - `2019-nov.db`
+    - `2019-oct.db`
+  - `brands/`
+    - `2019-nov.db`
+    - `2019-oct.db`
+  - `sales_data/`
+    - `2019-nov.db`
+    - `2019-oct.db`
+  - `shared_user_activity_by_hour/`
+    - `2019-shared.db`
+  - `spark/`
+    - `ecommerce_data_spark.db`
+  - `top_products/`
+    - `2019-top-products.db`
+  - `user_retention/`
+    - `2019-nov.db`
+    - `2019-oct.db`
+- `db_limited_50(same dbs with limiting 50 rows)/`
+  - `aggregated_sales/`
+    - `2019-nov.db`
+    - `2019-oct.db`
+  - `brands/`
+    - `2019-nov.db`
+    - `2019-oct.db`
+  - `sales_data/`
+    - `2019-nov.db`
+    - `2019-oct.db`
+  - `shared_user_activity_by_hour/`
+    - `2019-shared.db`
+  - `spark/`
+    - `ecommerce_data_spark.db`
+  - `top_products/`
+    - `2019-top-products.db`
+  - `user_retention/`
+    - `2019-nov.db`
+    - `2019-oct.db`
+- `modules/` (directory containing Python modules)
+  - `aggregate_sales_result.py`
+  - `analyze_data.py`
+  - `config_loader.py`
+  - `loader.py`
+  - `page_data_manager.py`
+  - `processor.py`
+  - `setup_runner.py`
+  - `sqlite_manager.py`
+  - `tester.py`
+  - `__init__.py`
+- `pages/` (directory containing Streamlit pages)
+  - `brand_performance.py`
+  - `events_activities_by_hour.py`
+  - `faker_spark_stats.py`
+  - `overview.py`
+  - `static_graphs.py`
+  - `top_prods.py`
+  - `user_retention.py`
+- `Part-c/` (directory containing Part-c files)
+  - `e_commerce_spark.ipynb`
+  - `Graphdb.md`
+  - `graph_db_query.md`
+  - `image-1.png`
+  - `image.png`
+- `utils/` (directory containing utility scripts)
+  - `db_minimizer.py`
+  - `logger.py`
 
-```plaintext
-Ecommerce_Big_Data_Analysis/
-├── .gitignore
-├── .streamlit/
-│   └── config.toml
-├── data/            # Contains the datasets
-│   ├── 2019-Nov.csv - 
-│   └── 2019-Oct.csv - 
-├── db/         # Contains the SQLite and Duckdb databases
-│   ├── 2019-nov.duckdb
-│   ├── 2019-oct.duckdb
-│   ├── aggregated_sales/
-│   ├── brands/
-│   ├── sales_data/
-│   ├── shared_user_activity_by_hour/
-│   ├── top_products/
-│   └── user_retention/
-├── modules/  
-│   ├── __init__.py
-│   ├── aggregate_sales_result.py
-│   ├── analyze_data.py
-│   ├── config_loader.py
-│   ├── loader.py
-│   ├── processor.py
-│   ├── setup_runner.py
-│   ├── sqlite_manager.py
-│   └── tester.py
-    └── page_data_manager.py
-├── pages/      # Contains the Streamlit pages
-│   ├── brand_performance.py
-│   ├── events_activities_by_hour.py
-│   ├── overview.py
-│   ├── static_graphs.py
-│   ├── top_prods.py
-│   └── user_retention.py
-├── utils/      
-│   └── logger.py
-├── config.json      # Contains the configuration settings, filepaths etc.
-├── main.py
-├── README.md
-├── requirements.txt
-
-```
 
 # Functional Modules Overview
 
@@ -176,6 +212,10 @@ second query:
 
 - **Purpose**: Manages the SQLite database queries, and help convert df recieved from the duckdb to sqlite.
 
+## Setup Runner (`setup_runner.py`)
+
+- **Purpose**: Manages the setup of the databases, and the first loading of the data if created from scratch from the csv files.
+
 ## Aggregate Sales Result (`aggregate_sales_result.py`)
 
 - **Purpose**: Class to manage and print the results of the aggregate sales query.
@@ -186,6 +226,9 @@ second query:
 - **Functionality**: Check for each page, if its "mini" sqlite database is already created, if not, create it, and then load the data to be used in the page.
 
 ## "Main" Analytical Queries 
+
+The following are the main analytical queries used in the project, each one has its own function in the `analyze_data.py` module.
+Those are the queries that are used as the base for the visualizations in the Streamlit pages.
 
 ```python
 
@@ -335,3 +378,68 @@ def user_retention_query():
 
     return df_nov, df_oct
 ```
+
+### From the google collab notebook using spark
+
+```python
+# Window function query for Spark SQL
+rolling_sales_summary_query = """
+WITH DailySales AS (
+    SELECT
+        category_code,
+        DATE(event_time) AS event_date,
+        COUNT(*) AS daily_sales
+    FROM events
+    WHERE event_type = 'purchase'
+    GROUP BY category_code, DATE(event_time)
+), AvgSales AS (
+    SELECT
+        category_code,
+        event_date,
+        daily_sales,
+        AVG(daily_sales) OVER (PARTITION BY category_code ORDER BY event_date ROWS BETWEEN 6 PRECEDING AND CURRENT ROW) AS avg_last_7_days
+    FROM DailySales
+)
+SELECT
+    category_code,
+    event_date,
+    daily_sales,
+    avg_last_7_days,
+    (daily_sales - avg_last_7_days) AS diff_from_avg
+FROM AvgSales
+ORDER BY event_date, category_code;
+"""
+
+# Execute the query
+sales_summary = spark.sql(rolling_sales_summary_query)
+sales_summary.show()
+
+# Optionally, convert to Pandas DataFrame for visualization
+sales_summary_pd = sales_summary.toPandas()
+```
+
+## Streamlit Pages
+
+The project includes the following Streamlit pages:
+`brand_performance.py`
+`events_activities_by_hour.py`
+`overview.py`
+`static_graphs.py`
+`top_prods.py`
+`user_retention.py`
+`faker_spark_stats.py`
+
+Each page is responsible for visualizing specific data insights and trends from the specified small sqlite database.
+
+## Database Minimizer (`db_minimizer.py`)
+
+we were asked to create a script that will minimize the size of the SQLite databases by limiting the number of rows in each table.
+
+- **Purpose**: Minimizes the size of the SQLite databases by limiting the number of rows in each table.
+- **Functionality**: The script walks through a specified source directory, finds all SQLite database files, and creates new database files in a target directory with a limited number of rows for each table.
+
+## Part-c
+
+- **Purpose**: Contains the Google Collab notebook using spark, and aswell the graphdb scheme.
+- **Functionality**: The Google Collab notebook uses faker to create some data equivalent to the one we have, and then uses spark to analyze it, we save the processed data to a sqlite database, and then we can use it in the designated streamlit page.
+

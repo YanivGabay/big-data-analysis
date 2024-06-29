@@ -23,6 +23,8 @@ def show():
 
 - [X] UML diagram of the project.
 
+- [X] Added the spark db and graphs based on it
+
 - [ ] Add some easy spinner/loader module to all the pages, not only loader.py.
 
 - [ ] Make the top_prods be negative values, or show both? 
